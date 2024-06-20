@@ -6,25 +6,19 @@ from types import ModuleType
 from bpy.utils import register_class, unregister_class # type: ignore
 
 bl_info = {
-    "name": "Add-on",
+    "name": "MMZ Add-on",
     "author": "MOMIZI",
     "version": (1, 0, 0),
     "blender": (3, 6, 0),
-    "location": "View3D > Tools > Add-on",
-    "description": "",
+    "location": "View3D > Tools > MMZ Add-on",
+    "description": "機能詰め合わせ",
     "category": "General",
 }
 
-print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+class AddonRegister:
 
-class RegisterAddon:
-    TARGET_DIRS: List[str] = [
-        'operators',
-        'panels'
-    ]
-
-    def __init__(self, path: str) -> None:
-        self.__modules, self.__classes = ProcLoader(path).load(RegisterAddon.TARGET_DIRS)
+    def __init__(self, path: str, target_dirs: List[str]) -> None:
+        self.__modules, self.__classes = ProcLoader(path).load(target_dirs)
 
     def register(self) -> None:
         for cls in self.__classes:
@@ -45,7 +39,10 @@ class RegisterAddon:
     def __invoke(self, mdl: ModuleType | object, identifier: str) -> None:
         if hasattr(mdl, identifier): getattr(mdl, identifier)()
 
-addon = RegisterAddon(__file__)
+addon = AddonRegister(__file__, [
+    'operators',
+    'panels'
+])
 
 def register() -> None:
     addon.register()
