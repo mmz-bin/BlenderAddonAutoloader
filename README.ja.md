@@ -86,7 +86,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
         -  `ctrl`: コントロールキー(デフォルトは`False`)
         - `alt`: オルトキー(デフォルトは`False`)
         - `oskey`: OSのキー(デフォルトは`False`)
-    - 例: `Key(HOGE_OT_YoutOperator, 'A')`
+    - 例: `Key(HOGE_OT_YourOperator, 'A')`
 
 - __ShotrcutsRegister__ クラス
     - ショートカットキーを登録します。
