@@ -52,8 +52,8 @@ In this readme, the sample code is written with the following directory structur
     - The first argument of the constructor should be the addon folder (usually the `__file__` variable in the `__init__.py` file), and the second argument should be a list of folder names containing the respective functionalities.
     - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
         - The third argument is the module name (usually the `__name__` variable in the `__init__.py` file), and the fourth argument is the translation table dictionary.
-    - The fifth argument (is_debug_mode) is optional and sets the debug mode to either enabled or disabled. (The default is `False`)
-        - If debug mode is `False`, the `debug` folder directly under each specified directory will be ignored. (If it exists)
+    - The fifth argument (`is_debug_mode`) is optional and sets the debug mode to either enabled or disabled. (The default is `False`)
+        - When the debug mode is set to `False`, the `debug` folder directly under each directory specified in the second argument is ignored (if it exists).
         - If debug mode is `True`, the reload() method becomes available.
         - Example: `addon = AddonRegister(__file__, ['operators', panels], is_debug_mode=True)`
     - Create an instance in the `__init__.py` file, and wrap the `register()` and `unregister()` methods with global functions of the same name.
