@@ -1,6 +1,6 @@
 This library uses English that has been machine-translated from Japanese.
 
-
+__[The English readme is here](README.md)__
 
 # BlenderAddonLoader
 Blenderアドオンの動的な登録・解除を実現するスクリプトです。
