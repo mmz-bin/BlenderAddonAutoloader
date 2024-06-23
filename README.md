@@ -5,7 +5,18 @@ __[日本語のreadmeはこちらから](README.ja.md)__
 # BlenderAddonLoader
 This script allows for the dynamic registration and unregistration of Blender addons. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
 
-__Note: The three files inside the core directory (register_addon.py, register_shortcuts.py, proc_loader.py) should be placed in the same directory.__
+__Note: The three files inside the core directory (addon_register.py, shortcuts_register.py, proc_loader.py) should be placed in the same directory.__
+
+## Features
+- Registers and unregisters all addon classes within a specified directory, including subdirectories.
+- Define a list named `ignore` in the `__init__.py` of each directory to specify module names that should be ignored.
+    - The module path is relative to the directory where the `__init__.py` file defining the list is located.
+        - Example (in the `__init__.py` file of the `operators` folder): `ignore = ['your_operator']`
+- Use the [`disable`](#proc_loaderpy) decorator to ignore specific classes.
+    - Example: `@disable`
+- Use the [`priority`](#proc_loaderpy) decorator to control the loading order of specific classes.
+    - Example: `@priority(42)`
+- Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
 
 In this readme, the sample code is written with the following directory structure:
 ```
