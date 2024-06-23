@@ -44,7 +44,7 @@ In this readme, the sample code is written with the following directory structur
     - The first argument of the constructor should be the addon folder (usually the `__file__` variable in the `__init__.py` file), and the second argument should be a list of folder names containing the respective functionalities.
     - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
         - The third argument is the module name (usually the `__name__` variable in the `__init__.py` file), and the fourth argument is the translation table dictionary.
-    - Create an instance in the `__init__.py` file and wrap the `register()` and `unregister()` functions.
+    - Create an instance in the __init__.py file, and wrap the register() and unregister() methods with global functions of the same name.
     - Example
     ```
         addon = AddonRegister(__file__, ['operators', 'panels']) # Instance creation
@@ -60,8 +60,8 @@ In this readme, the sample code is written with the following directory structur
     }
 
     addon = AddonRegister(__file__, ['operators', 'panels'], __name__, translation_dict) # Instance creation
-    def register() -> None: addon.register()                                             # Wrap register() function
-    def unregister() -> None: addon.unregister()                                         # Wrap unregister() function
+    def register() -> None: addon.register()                                             # Wrap register() method
+    def unregister() -> None: addon.unregister()                                         # Wrap unregister() method
     ```
 
 ## shortcuts_register.py

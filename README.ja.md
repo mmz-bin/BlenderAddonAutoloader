@@ -46,12 +46,12 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     - コンストラクタの第一引数にはアドオンフォルダ(通常は`__init__.py`ファイルの`__file__`変数)、第二引数には各機能のファイルが含まれるフォルダ名をリストで渡してください。
     - 第三・第四引数はオプションで、モジュール名とBlenderの標準形式の翻訳テーブルを渡すことで自動で登録・解除します。
         - 第三引数にはモジュール名(通常は`__init__.py`ファイルの`__name__`変数)、第四引数には翻訳テーブルの辞書を渡してください
-    - `__init__.py`ファイルでインスタンスを生成し、`register()`関数と`unregister()`関数をラップしてください。
+    - `__init__.py`ファイルでインスタンスを生成し、`register()`メソッドと`unregister()`メソッドを同名のグローバル関数でラップしてください。
     - 例
     ```
         addon = AddonRegister(__file__, ['operators', 'panels']) #インスタンス生成
-        def register() -> None: addon.register()                 #register()関数をラップ
-        def unregister() -> None: addon.unregister()             #unregister()関数をラップ
+        def register() -> None: addon.register()                 #register()メソッドをラップ
+        def unregister() -> None: addon.unregister()             #unregister()メソッドをラップ
     ```
     - 翻訳辞書を登録する例
     ```
