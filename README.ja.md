@@ -7,7 +7,18 @@ Blenderアドオンの動的な登録・解除を実現するスクリプトで�
 クラスの登録・解除・無効化・優先順位付け・ショートカットキーの登録といった面倒な作業を自動で行うことができます。
 Blender 4.1で動作確認しています。
 
-__注意：coreディレクトリ内部にある3つのファイル(register_addon.py, register_shortcuts.py, proc_loader.py)は同じディレクトリに配置してください。__
+__注意：coreディレクトリ内部にある3つのファイル(addon_register.py, shortcuts_register.py, proc_loader.py)は同じディレクトリに配置してください。__
+
+## 機能
+- サブディレクトリを含めて、指定したディレクトリ内のすべてのアドオンのクラスを登録・解除します。
+- 各ディレクトリの`__init__.py`に`ignore`という名前のリストを定義し、モジュール名を記述することでそのモジュールを無視します。
+    - モジュールのパスはリストが定義されている`__init__.py`ファイルが存在するディレクトリから見た相対パスです。
+        - 例(`operators`フォルダ内の`__init__.py`ファイルの場合): `ignore = ['your_operator']`
+- [`disable`](#proc_loaderpy)デコレータを使うことで特定のクラスを無視することができます。
+    - 例: `@disable`
+- [`priority`](#proc_loaderpy)デコレータを使うことで特定のクラスの読み込み順を制御することができます。
+    - 例: `@priority(42)`
+- [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
 
 このreadmeでは以下のディレクトリ構成としてサンプルコードを記述します：
 ```
