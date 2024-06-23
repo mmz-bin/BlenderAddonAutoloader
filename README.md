@@ -17,6 +17,7 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
 - Use the [`priority`](#proc_loaderpy) decorator to control the loading order of specific classes.
     - Example: `@priority(42)`
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
+    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
 In this readme, the sample code is written with the following directory structure:
 ```
