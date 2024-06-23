@@ -204,9 +204,7 @@ addon = AddonRegister(__file__, [
 
 def register() -> None: addon.register()
 
-def unregister() ->
-
- None: addon.unregister()
+def unregister() -> None: addon.unregister()
 
 if __name__ == '__main__':
     register()
