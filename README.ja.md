@@ -254,9 +254,7 @@ class HOGE_OT_ToggleLang(Operator):
     bl_description = "Toggle Language."
 
     def execute(self, context: Context) -> Set[str]:
-        view = context.preferences.view
-
-        view.use_translate_interface = not view.use_translate_interface
+        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
 
         return {"FINISHED"}
 
