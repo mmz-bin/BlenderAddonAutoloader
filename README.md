@@ -229,11 +229,9 @@ class HOGE_OT_ToggleLang(Operator):
     def execute(self, context: Context) -> Set[str]:
         view = context.preferences.view
 
-        langs: tuple[str, str] = ('en_US', 'ja_JP')
-
-        cur = view.language
-        view.language = langs[0] if cur == langs[1] else langs[1]
-        view.use_translate_new_dataname = False
+        isUseTranslate = not view.use_translate_interface
+        view.use_translate_interface = isUseTranslate
+        view.use_translate_tooltips = isUseTranslate
 
         return {"FINISHED"}
 
