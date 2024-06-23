@@ -21,7 +21,7 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
     - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
 - Several debugging features are also included.
-    - These can be enabled using the is_debug_mode of the [`AddonRegister`](#addon_registerpy) class.
+    - These can be enabled using the `is_debug_mode` argument of the [`AddonRegister`](#addon_registerpy) class.
         - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
         - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_registerpy) method) becomes available.
 

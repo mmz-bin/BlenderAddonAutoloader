@@ -23,7 +23,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
 - デバッグ向けの機能もいくつか搭載されています。
-    - [`AddonRegister`](#addon_registerpy)クラスのis_debug_modeによって有効化できます。
+    - [`AddonRegister`](#addon_registerpy)クラスの`is_debug_mode`引数によって有効化できます。
         - 無効にすると、各ディレクトリ直下に`debug`ディレクトリが存在する場合、その中にあるモジュールが無視されます。
         - 有効にすると`debug`ディレクトリ内のモジュールが読み込まれ、アドオンの再読み込み機能([`reload()`](#addon_registerpy)メソッド)が使えるようになります。
 
