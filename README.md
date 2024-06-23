@@ -96,7 +96,7 @@ In this readme, the sample code is written with the following directory structur
             - One or multiple Key objects
             - If multiple, pass them as a list
 
-        _The following arguments are optional and correspond to the arguments of the context.window_manager.keyconfigs.addon.keymaps.new() function._
+        _The following arguments are optional and correspond to the arguments of the bpy.context.window_manager.keyconfigs.addon.keymaps.new() function._
 
         - `name`: Identifier for the shortcut (default is `'Window'`)
         - `space_type`: Specifies the area where the shortcut key operates (default is `'EMPTY'`)

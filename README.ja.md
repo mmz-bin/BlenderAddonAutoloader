@@ -98,7 +98,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
             - 一つまたは複数のKeyオブジェクト
             - 複数の場合はリストとして渡してください
 
-        _これ以降の引数はオプションであり、context.window_manager.keyconfigs.addon.keymaps.new()関数の引数に対応しています。_
+        _これ以降の引数はオプションであり、bpy.context.window_manager.keyconfigs.addon.keymaps.new()関数の引数に対応しています。_
 
         - `name`: ショートカットの識別子です。(デフォルトは`'Window'`)
         - `space_type`: ショートカットキーが動作する領域を指定します。(デフォルトは`'EMPTY'`)
