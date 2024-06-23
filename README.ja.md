@@ -108,12 +108,11 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
-    **`delete(km, kmi) -> bool`メソッド**
-
-    - キーマップとキーマップアイテムを受け取り、ショートカットキーを削除します。
+    **`delete(kms) -> bool`メソッド**
+    - キーマップとキーマップアイテムをタプルとして受け取り、ショートカットキーを削除します。
     - 正しく削除されたら`True`、存在しない値を指定すると`False`が返ります。
 
-    - 例: `ShortcutsRegister().delete(km, kmi)`
+    - 例: `ShortcutsRegister().delete(kms)`
 
     **`unregister()`メソッド**
 
@@ -184,7 +183,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
         - 引数: `modules`: 対象のモジュールを指定します。
         - 例: `classes = pl.load_classes(modules)`
 
-### サンプル
+# サンプル
 
 `__init__.py`
 ```

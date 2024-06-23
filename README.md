@@ -106,12 +106,13 @@ In this readme, the sample code is written with the following directory structur
 
     - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
-    **`delete(km, kmi)` method**
+    **`delete(kms)` method**
 
     - Takes a keymap and keymap item to delete the shortcut key.
+    - It accepts a keymap and keymap item as a tuple and deletes the shortcut key.
     - It returns `True` if it is correctly deleted, and `False` if a non-existent value is specified.
 
-    - Example: `ShortcutsRegister().delete(km, kmi)`
+    - Example: `ShortcutsRegister().delete(kms)`
 
     **`unregister()` method**
 
@@ -182,7 +183,7 @@ In this readme, the sample code is written with the following directory structur
         - Argument: `modules`: Specifies the target modules.
         - Example: `classes = pl.load_classes(modules)`
 
-### Sample
+# Sample
 
 `__init__.py`
 ```
