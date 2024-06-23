@@ -21,7 +21,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
  
-- 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除のさいに呼び出されます。
+- 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除の際に呼び出されます。
+- Blender標準形式の[翻訳テーブル](#addon_registerpy)を使用して多言語に対応させることができます。
 
 このreadmeでは以下のディレクトリ構成としてサンプルコードを記述します：
 ```
