@@ -238,5 +238,5 @@ class HOGE_OT_ToggleLang(Operator):
         return {"FINISHED"}
 
 def register() -> None:
-    ShortcutsRegister().add(Key(MMZ_OT_ToggleLang.bl_idname, 'F1'))
+    ShortcutsRegister().add(Key(HOGE_OT_ToggleLang.bl_idname, 'F1'))
 ```
