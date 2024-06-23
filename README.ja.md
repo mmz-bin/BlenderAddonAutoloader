@@ -3,7 +3,7 @@ This library uses English that has been machine-translated from Japanese.
 __[The English readme is here](README.md)__
 
 # BlenderAddonAutoloader
-Blenderアドオンの動的な登録・解除を実現するスクリプトです。
+Blenderアドオンを構成するファイルの動的な登録・解除を実現するスクリプトです。
 クラスの登録・解除・無効化・優先順位付け・ショートカットキーの登録といった面倒な作業を自動で行うことができます。
 Blender 4.1で動作確認しています。
 
