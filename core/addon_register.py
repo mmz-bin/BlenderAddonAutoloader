@@ -2,13 +2,13 @@ from typing import List, Union, Any, Dict
 from types import ModuleType
 
 from .proc_loader import ProcLoader
-from .register_shortcuts import RegisterShortcut
+from .shortcuts_register import ShortcutsRegister
 
 from bpy.utils import register_class, unregister_class # type: ignore
 from bpy.app import translations
 
 class AddonRegister:
-    def __init__(self, path: str, target_dirs: List[str], name: Union[str, None] = None, translation_table: Union[Dict[str, Dict[Any, str]], None] = None) -> None:
+    def __init__(self, path: str, target_dirs: List[str], name: Union[str, None] = None, translation_table: Union[Dict[str, Dict[tuple[Any, Any], str]], None] = None) -> None:
         self.__name = name
         self.__modules, self.__classes = ProcLoader(path).load(target_dirs)
         self.__translation_table = translation_table
@@ -27,7 +27,7 @@ class AddonRegister:
 
         self.__call('unregister')
 
-        RegisterShortcut().unregister()
+        ShortcutsRegister().unregister()
         if self.__translation_table and self.__name: translations.unregister(self.__name)
 
     def __call(self, identifier: str) -> None:

@@ -21,7 +21,7 @@ class Key:
 
 
 #ショートカットキーを登録する
-class RegisterShortcut:
+class ShortcutsRegister:
     #シングルトンパターン
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         if not hasattr(cls ,'_instance'):

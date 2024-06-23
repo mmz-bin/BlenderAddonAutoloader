@@ -1,4 +1,4 @@
-from .core.register_addon import AddonRegister
+from .core.addon_register import AddonRegister
 
 bl_info = {
     "name": "Addon_name",

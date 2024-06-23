@@ -26,8 +26,6 @@ def priority(pr: int): # type: ignore
         return cls # type: ignore
     return _priority # type: ignore
 
-def sendMsg(type: str, msg: str) -> None: print(f"{type}: {msg}")
-
 class ProcLoader:
     def __init__(self, path: str, target_classes: object = (
         Operator,
@@ -63,7 +61,7 @@ class ProcLoader:
             try:
                 import_module(path)
             except (ImportError, ModuleNotFoundError) as e:
-                sendMsg("Warning", f'Failed to load "{path}" module. \n {e}')
+                print(f'ProcLoader: Warning: Failed to load "{path}" module. \n {e}')
 
         return [import_module(mdl) for mdl in paths] # type: ignore
 
