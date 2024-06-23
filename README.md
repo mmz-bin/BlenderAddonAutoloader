@@ -109,6 +109,7 @@ In this readme, the sample code is written with the following directory structur
     **`delete(km, kmi)` method**
 
     - Takes a keymap and keymap item to delete the shortcut key.
+    - It returns `True` if it is correctly deleted, and `False` if a non-existent value is specified.
 
     - Example: `ShortcutsRegister().delete(km, kmi)`
 

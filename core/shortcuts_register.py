@@ -58,12 +58,18 @@ class ShortcutsRegister:
             shortcut_keys.append((keymap, keymap_item))
 
         self.__shortcut_keys += shortcut_keys
+
         return shortcut_keys
 
 
-    def delete(self, km: KeyMap, kmi: KeyMapItem):
-        km.keymap_items.remove(kmi)
-        self.__shortcut_keys.remove((km, kmi))
+    def delete(self, km: KeyMap, kmi: KeyMapItem) -> bool:
+        try:
+            km.keymap_items.remove(kmi)
+            self.__shortcut_keys.remove((km, kmi))
+        except ValueError:
+            return False
+
+        return True
 
     def unregister(self):
         for keymap, keymap_item in self.__shortcut_keys:

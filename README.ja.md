@@ -108,9 +108,10 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
-    **`delete(km, kmi)`メソッド**
+    **`delete(km, kmi) -> bool`メソッド**
 
     - キーマップとキーマップアイテムを受け取り、ショートカットキーを削除します。
+    - 正しく削除されたら`True`、存在しない値を指定すると`False`が返ります。
 
     - 例: `ShortcutsRegister().delete(km, kmi)`
 
