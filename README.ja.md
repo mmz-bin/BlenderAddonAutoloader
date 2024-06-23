@@ -95,7 +95,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     **`add(keys, name, space_type, region_type, modal, tool) -> List[tuple[KeyMap, KeyMapItem]]`メソッド**
 
     - 一つまたは複数のショートカットキーを登録し、登録したキーマップとアイテムをリストで返します。
-    - disableデコレータが付けられたクラスはスキップされます。
+    - `disable`デコレータが付けられたクラスはスキップされます。
     - 引数
         - `keys`
             - 一つまたは複数のKeyオブジェクト

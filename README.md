@@ -93,7 +93,7 @@ In this readme, the sample code is written with the following directory structur
     **`add(keys, name, space_type, region_type, modal, tool) -> List[tuple[KeyMap, KeyMapItem]]` method**
 
     - Registers one or multiple shortcut keys and returns a list of registered keymaps and items.
-    - Classes with the disable decorator will be skipped.
+    - Classes with the `disable` decorator will be skipped.
     - Arguments
         - `keys`
             - One or multiple Key objects
