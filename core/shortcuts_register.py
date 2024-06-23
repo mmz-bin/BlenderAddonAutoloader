@@ -20,7 +20,6 @@ class Key:
     alt:          bool = False
     oskey:        bool = False
 
-
 #ショートカットキーを登録する
 class ShortcutsRegister:
     #シングルトンパターン

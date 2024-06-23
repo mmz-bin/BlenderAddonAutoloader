@@ -22,6 +22,10 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     - 例: `@priority(42)`
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
+- デバッグ向けの機能もいくつか搭載されています。
+    - [`AddonRegister`](#addon_registerpy)クラスのis_debug_modeによって有効化できます。
+        - 無効にすると、各ディレクトリ直下に`debug`ディレクトリが存在する場合、その中にあるモジュールが無視されます。
+        - 有効にすると`debug`ディレクトリ内のモジュールが読み込まれ、アドオンの再読み込み機能([`reload()`](#addon_registerpy)メソッド)が使えるようになります。
 
 - 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除の際に呼び出されます。
 - Blender標準形式の[翻訳テーブル](#addon_registerpy)を使用して多言語に対応させることができます。
@@ -48,12 +52,22 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     - コンストラクタの第一引数にはアドオンフォルダ(通常は`__init__.py`ファイルの`__file__`変数)、第二引数には各機能のファイルが含まれるフォルダ名をリストで渡してください。
     - 第三・第四引数はオプションで、モジュール名とBlenderの標準形式の翻訳テーブルを渡すことで自動で登録・解除します。
         - 第三引数にはモジュール名(通常は`__init__.py`ファイルの`__name__`変数)、第四引数には翻訳テーブルの辞書を渡してください
+    - 第五引数(is_debug_mode)もオプションで、デバッグモードの有効と無効を設定します。(デフォルトは`False`)
+        - 例: `addon = AddonRegister(__file__, ['operators', panels], is_debug_mode=True)`
+            - デバッグモードが`False`の場合、指定した各ディレクトリ直下の`debug`フォルダが無視されます。(存在する場合)
+            - デバッグモードが`True`の場合、reload()メソッドが使用できるようになります。
     - `__init__.py`ファイルでインスタンスを生成し、`register()`メソッドと`unregister()`メソッドを同名のグローバル関数でラップしてください。
+
+    **`reload()`メソッド**
+    - Blenderの`script.reload`オペレータが実行された際に、アドオン全体を再読込します。
+    - デバッグ用の機能で、コンストラクタの`is_debug_mode`引数が`True`に設定されている場合のみ動作します。`False`の場合は何もしません。
+    - 使用する場合、`__init__.py`ファイル内でこのメソッドを呼び出すようにしてください。
+
     - 例
     ```
-        addon = AddonRegister(__file__, ['operators', 'panels']) #インスタンス生成
-        def register() -> None: addon.register()                 #register()メソッドをラップ
-        def unregister() -> None: addon.unregister()             #unregister()メソッドをラップ
+    addon = AddonRegister(__file__, ['operators', 'panels']) #インスタンス生成
+    def register() -> None: addon.register()                 #register()メソッドをラップ
+    def unregister() -> None: addon.unregister()             #unregister()メソッドをラップ
     ```
     - 翻訳辞書を登録する例
     ```
@@ -66,6 +80,13 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     addon = AddonRegister(__file__, ['operators', 'panels'], __name__, translation_dict) #インスタンス生成
     def register() -> None: addon.register()                                             #register()関数をラップ
     def unregister() -> None: addon.unregister()                                         #unregister()関数をラップ
+    ```
+    - デバッグモードを使用する例
+    ```
+    addon = AddonRegister(__file__, ['operators', 'panels'], is_debug_mode=True) #インスタンス生成
+    addon.reload()                                           #アドオンを再読込する
+    def register() -> None: addon.register()                 #register()メソッドをラップ
+    def unregister() -> None: addon.unregister()             #unregister()メソッドをラップ
     ```
 
 ## shortcuts_register.py
@@ -162,6 +183,9 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
             - `path`: アドオンへの絶対パス(通常はアドオンの__init__.pyファイルの`__file__`変数)
             - `target_classes`(オプション): 読み込み対象のクラスを指定します。
                 - 指定しなかった場合、bpy.types下の`Operator`, `Panel`, `Menu`, `Preferences`, `PropertyGroup`クラスが対象になります。
+            - `is_debug_mode`(オプション)
+                - デバッグモードを指定します。(デフォルトは`False`)
+                    - `False`の場合、指定したディレクトリ直下にある`debug`フォルダを無視します。
         - 例: `pl = ProcLoader(__file__)`
 
     - **`load(dirs) -> List[Sequence[Union[ModuleType, object]]]`メソッド**

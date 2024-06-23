@@ -20,6 +20,12 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
     - Example: `@priority(42)`
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
     - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
+- Several debugging features are also included.
+    - These can be enabled using the is_debug_mode of the [`AddonRegister`](#addon_registerpy) class.
+        - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
+        - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_registerpy) method) becomes available.
+
+Would you like me to explain or elaborate on any part of this translation?
 - You can make it multilingual by using the [translation table](#addon_registerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
@@ -46,7 +52,17 @@ In this readme, the sample code is written with the following directory structur
     - The first argument of the constructor should be the addon folder (usually the `__file__` variable in the `__init__.py` file), and the second argument should be a list of folder names containing the respective functionalities.
     - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
         - The third argument is the module name (usually the `__name__` variable in the `__init__.py` file), and the fourth argument is the translation table dictionary.
+    - The fifth argument (is_debug_mode) is optional and sets the debug mode to either enabled or disabled. (The default is `False`)
+        - Example: `addon = AddonRegister(__file__, ['operators', panels], is_debug_mode=True)`
+            - If debug mode is `False`, the `debug` folder directly under each specified directory will be ignored. (If it exists)
+            - If debug mode is `True`, the reload() method becomes available.
     - Create an instance in the `__init__.py` file, and wrap the `register()` and `unregister()` methods with global functions of the same name.
+
+    **`reload()` Method**
+    - When the Blender's `script.reload` operator is executed, it reloads the entire add-on.
+    - This is a debugging feature and only works if the `is_debug_mode` argument in the constructor is set to `True`. It does nothing if `False`.
+    - If you want to use it, please call this method in the `__init__.py` file.
+
     - Example
     ```
         addon = AddonRegister(__file__, ['operators', 'panels']) # Instance creation
@@ -64,6 +80,13 @@ In this readme, the sample code is written with the following directory structur
     addon = AddonRegister(__file__, ['operators', 'panels'], __name__, translation_dict) # Instance creation
     def register() -> None: addon.register()                                             # Wrap register() method
     def unregister() -> None: addon.unregister()                                         # Wrap unregister() method
+    ```
+    - Example of using debug mode
+    ```
+    addon = AddonRegister(__file__, ['operators', 'panels'], is_debug_mode=True) # Instance creation
+    addon.reload()                                           # Reload the add-on
+    def register() -> None: addon.register()                 # Wrap the register() method
+    def unregister() -> None: addon.unregister()             # Wrap the unregister() method
     ```
 
 ## shortcuts_register.py
@@ -162,6 +185,9 @@ In this readme, the sample code is written with the following directory structur
             - `path`: Absolute path to the addon (usually the `__file__` variable in the addon's `__init__.py` file)
             - `target_classes` (optional): Specifies the target classes to load.
                 - If not specified, the `Operator`, `Panel`, `Menu`, `Preferences`, and `PropertyGroup` classes under bpy.types will be targeted.
+            - `is_debug_mode` (optional)
+                - Specifies the debug mode. (The default is `False`)
+                    - If `False`, it ignores the `debug` folder directly under the specified directory.
         - Example: `pl = ProcLoader(__file__)`
 
     - **`load(dirs) -> List[Sequence[Union[ModuleType, object]]]` method**

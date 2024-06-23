@@ -33,10 +33,11 @@ class ProcLoader:
         Menu,
         Preferences,
         PropertyGroup
-    )) -> None:
+    ), is_debug_mode: bool = False) -> None:
         root = dirname(path) if isfile(path) else path #指定されたパスがファイルであれば最後のフォルダまでのパスを取得する
         self.__dir_name = basename(root) #アドオンのフォルダ名       例:addon_folder
         self.__path = dirname(root)      #アドオンフォルダまでのパス 例:path/to/blender/script/
+        self.__is_debug_mode = is_debug_mode
 
         self.TARGET_CLASSES = target_classes
 
@@ -96,6 +97,7 @@ class ProcLoader:
             if not exists(cur_path) or isfile(cur_path): raise NotADirectoryError(f'"{cur_path}" is not a folder or does not exist.')
 
             ignore_mdl = self.__read_ignore_module(cur_path) #指定したフォルダからの相対パスの形
+            if not self.__is_debug_mode: ignore_mdl = ignore_mdl.union(set(('debug', )))
             mdl_root = join(self.__dir_name, dir)            #[アドオンフォルダ]/[現在のフォルダ]
 
             modules += self.__search_all_sub_dirs(cur_path, mdl_root, dir, ignore_mdl)
@@ -174,5 +176,8 @@ class ProcLoader:
             rel = '.'.join(rel_parts[rel_parts.index(dir)+1:])
         except IndexError:
             rel = ""
+
+        for i in ignore_module:
+            print(i)
 
         return not rel == "" and rel in ignore_module
