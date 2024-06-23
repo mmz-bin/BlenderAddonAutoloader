@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from typing import Self, Any, List, Union
+from typing import Self, List, Union
 
 from bpy import context
 from bpy.types import KeyMap, KeyMapItem
@@ -23,9 +23,8 @@ class Key:
 #ショートカットキーを登録する
 class ShortcutsRegister:
     #シングルトンパターン
-    def __new__(cls, *args: Any, **kwargs: Any) -> Self:
-        if not hasattr(cls ,'_instance'):
-            cls._instance = super().__new__(cls, *args, **kwargs) # type: ignore
+    def __new__(cls) -> Self:
+        if not hasattr(cls ,'_instance'): cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self):
@@ -62,10 +61,14 @@ class ShortcutsRegister:
         return shortcut_keys
 
 
-    def delete(self, kms: tuple[KeyMap, KeyMapItem]) -> bool:
+    def delete(self, kms: Union[KeyMap, tuple[KeyMap, KeyMapItem]], kmi: Union[KeyMapItem, None]=None) -> bool:
         try:
-            kms[0].keymap_items.remove(kms[1])
-            self.__shortcut_keys.remove(kms)
+            if type(kms) is KeyMap and kmi:
+                kms.keymap_items.remove(kmi)
+                self.__shortcut_keys.remove((kms, kmi))
+            else:
+                kms[0].keymap_items.remove(kms[1])
+                self.__shortcut_keys.remove(kms) #type: ignore
         except ValueError:
             return False
 
