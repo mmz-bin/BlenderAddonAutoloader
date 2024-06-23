@@ -20,6 +20,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
     - 例: `@priority(42)`
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
+ 
+- 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除のさいに呼び出されます。
 
 このreadmeでは以下のディレクトリ構成としてサンプルコードを記述します：
 ```
@@ -208,4 +210,33 @@ def unregister() -> None: addon.unregister()
 
 if __name__ == '__main__':
     register()
+```
+
+このスクリプトを使ってインターフェースの言語をF1キーで切り替えるアドオンの例(サンプルと同じファイル構成の場合、`operators`フォルダ内に適当な名前をつけた`.py`ファイルを配置し、その中にコピペしてください)
+
+```
+from typing import Set
+
+from bpy.types import Context, Operator
+
+from ..core.shortcuts_register import Key, ShortcutsRegister
+
+class MMZ_OT_ToggleLang(Operator):
+    bl_idname = "mmz.toggle_lang_operator"
+    bl_label = "Toggle Lang Operator"
+    bl_description = "言語を変更します。"
+
+    def execute(self, context: Context) -> Set[str]:
+        view = context.preferences.view
+
+        langs: tuple[str, str] = ('en_US', 'ja_JP')
+
+        cur = view.language
+        view.language = langs[0] if cur == langs[1] else langs[1]
+        view.use_translate_new_dataname = False
+
+        return {"FINISHED"}
+
+def register() -> None:
+    ShortcutsRegister().add(Key(MMZ_OT_ToggleLang.bl_idname, 'F1'))
 ```
