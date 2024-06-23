@@ -19,6 +19,8 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
     - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
+- If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
+
 In this readme, the sample code is written with the following directory structure:
 ```
 .
@@ -208,4 +210,33 @@ def unregister() ->
 
 if __name__ == '__main__':
     register()
+```
+
+Here is an example of an add-on that uses this script to switch the language of the interface with the F1 key (if the file structure is the same as the sample, place a .py file with an appropriate name in the operators folder and copy and paste it into it).
+
+```
+from typing import Set
+
+from bpy.types import Context, Operator
+
+from ..core.shortcuts_register import Key, ShortcutsRegister
+
+class HOGE_OT_ToggleLang(Operator):
+    bl_idname = "hoge.toggle_lang_operator"
+    bl_label = "Toggle Lang Operator"
+    bl_description = "Toggle Language."
+
+    def execute(self, context: Context) -> Set[str]:
+        view = context.preferences.view
+
+        langs: tuple[str, str] = ('en_US', 'ja_JP')
+
+        cur = view.language
+        view.language = langs[0] if cur == langs[1] else langs[1]
+        view.use_translate_new_dataname = False
+
+        return {"FINISHED"}
+
+def register() -> None:
+    ShortcutsRegister().add(Key(MMZ_OT_ToggleLang.bl_idname, 'F1'))
 ```
