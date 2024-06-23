@@ -19,7 +19,7 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
 - Use the [`priority`](#proc_loaderpy) decorator to control the loading order of specific classes.
     - Example: `@priority(42)`
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
-    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
+    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
 - You can make it multilingual by using the [translation table](#addon_registerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
@@ -69,7 +69,7 @@ In this readme, the sample code is written with the following directory structur
 ## shortcuts_register.py
 - __Key__ class
     - This is a data class for storing shortcut key information.
-        - `bl_idname`: The bl_idname of the operator the shortcut key targets
+        - `operator`: The class object that is the target of the shortcut key.
         - `key`: The shortcut key
 
         __The following attributes are optional.__
@@ -84,7 +84,7 @@ In this readme, the sample code is written with the following directory structur
         - `ctrl`: Control key (default is `False`)
         - `alt`: Alt key (default is `False`)
         - `oskey`: OS key (default is `False`)
-    - Example: `Key(HOGE_OT_YourOperator.bl_idname, 'A')`
+    - Example: `Key(HOGE_OT_YourOperator, 'A')`
 
 - __ShortcutsRegister__ class
     - This class registers shortcut keys.
@@ -106,7 +106,7 @@ In this readme, the sample code is written with the following directory structur
         - `modal`: Specifies whether it is in modal mode (default is `False`)
         - `tool`: Specifies whether it is in tool mode (default is `False`)
 
-    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
+    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
 
     **`delete(kms)` method**
 
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     register()
 ```
 
-Here is an example of an add-on that uses this script to switch the language of the interface with the F1 key (if the file structure is the same as the sample, place a .py file with an appropriate name in the operators folder and copy and paste it into it).
+An example of an add-on that displays a notification when the F1 key is pressed (if the file structure is the same as the sample, place a `.py` file with an appropriate name in the `operators` folder and copy and paste into it).
 
 ```
 from typing import Set
@@ -223,18 +223,17 @@ from bpy.types import Context, Operator
 
 from ..core.shortcuts_register import Key, ShortcutsRegister
 
-class HOGE_OT_ToggleLang(Operator):
-    bl_idname = "hoge.toggle_lang_operator"
-    bl_label = "Toggle Lang Operator"
-    bl_description = "Toggle Language."
+class HOGE_OT_Report(Operator):
+    bl_idname = "hoge.report_operator"
+    bl_label = "Report Operator"
+    bl_description = "Send information"
 
     def execute(self, context: Context) -> Set[str]:
-        view = context.preferences.view
-
-        view.use_translate_interface = not view.use_translate_interface
+        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
 
         return {"FINISHED"}
 
 def register() -> None:
-    ShortcutsRegister().add(Key(HOGE_OT_ToggleLang.bl_idname, 'F1'))
+    ShortcutsRegister().add(Key(HOGE_OT_Report, 'F1'))
+
 ```

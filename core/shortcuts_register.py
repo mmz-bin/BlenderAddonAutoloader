@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-
 from typing import Self, List, Union
+
+from .proc_loader import ProcLoader
 
 from bpy import context
 from bpy.types import KeyMap, KeyMapItem
@@ -8,7 +9,7 @@ from bpy.types import KeyMap, KeyMapItem
 #ショートカットキーの情報
 @dataclass
 class Key:
-    bl_idname:    str            #オペレーターのbl_idname
+    operator:     object         #オペレーターのクラスオブジェクト
     key:          str            #対象のキー
     key_modifier: str  = 'NONE'  #追加のキー
     trigger:      str  = 'PRESS' #実行するキーの状態(トリガー)
@@ -48,9 +49,11 @@ class ShortcutsRegister:
         )
 
         for k in keys:
+            if ProcLoader.isDisabled(k.operator): continue
+
             #キーマップにアイテムを追加する
             keymap_item = keymap.keymap_items.new(
-                k.bl_idname, k.key, k.trigger,
+                k.operator.bl_idname, k.key, k.trigger, # type: ignore
                 key_modifier=k.key_modifier, any=k.any, shift=k.shift, ctrl=k.ctrl, alt=k.alt, oskey=k.oskey
             )
 
@@ -61,14 +64,10 @@ class ShortcutsRegister:
         return shortcut_keys
 
 
-    def delete(self, kms: Union[KeyMap, tuple[KeyMap, KeyMapItem]], kmi: Union[KeyMapItem, None]=None) -> bool:
+    def delete(self, kms: tuple[KeyMap, KeyMapItem]) -> bool:
         try:
-            if type(kms) is KeyMap and kmi:
-                kms.keymap_items.remove(kmi)
-                self.__shortcut_keys.remove((kms, kmi))
-            else:
-                kms[0].keymap_items.remove(kms[1])
-                self.__shortcut_keys.remove(kms) #type: ignore
+            kms[0].keymap_items.remove(kms[1])
+            self.__shortcut_keys.remove(kms) #type: ignore
         except ValueError:
             return False
 

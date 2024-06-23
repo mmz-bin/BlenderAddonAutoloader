@@ -21,8 +21,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 - [`priority`](#proc_loaderpy)デコレータを使うことで特定のクラスの読み込み順を制御することができます。
     - 例: `@priority(42)`
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
-    - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
- 
+    - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
+
 - 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除の際に呼び出されます。
 - Blender標準形式の[翻訳テーブル](#addon_registerpy)を使用して多言語に対応させることができます。
 
@@ -71,7 +71,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 ## shortcuts_register.py
 - __Key__ クラス
     - ショートカットキーの情報を保存するデータクラスです。
-        - `bl_idname`: ショートカットキーの対象となるオペレーターのbl_idname
+        - `operator`: ショートカットキーの対象となるオペレーター
         - `key`: ショートカットキー
 
         __これ以降のアトリビュートはオプションです。__
@@ -86,7 +86,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
         -  `ctrl`: コントロールキー(デフォルトは`False`)
         - `alt`: オルトキー(デフォルトは`False`)
         - `oskey`: OSのキー(デフォルトは`False`)
-    - 例: `Key(HOGE_OT_YoutOperator.bl_idname, 'A')`
+    - 例: `Key(HOGE_OT_YoutOperator, 'A')`
 
 - __ShotrcutsRegister__ クラス
     - ショートカットキーを登録します。
@@ -108,7 +108,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
         - `modal`: モーダルモードかを指定します。(デフォルトは`False`)
         - `tool`: ツールモードかを指定します。(デフォルトは`False`)
 
-    - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
+    - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
 
     **`delete(kms) -> bool`メソッド**
     - キーマップとキーマップアイテムをタプルとして受け取り、ショートカットキーを削除します。
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     register()
 ```
 
-このスクリプトを使ってインターフェースの言語をF1キーで切り替えるアドオンの例(サンプルと同じファイル構成の場合、`operators`フォルダ内に適当な名前をつけた`.py`ファイルを配置し、その中にコピペしてください)
+F1キーが押されたときに通知を表示するアドオンの例(サンプルと同じファイル構成の場合、`operators`フォルダ内に適当な名前をつけた`.py`ファイルを配置し、その中にコピペしてください)
 
 ```
 from typing import Set

@@ -44,6 +44,9 @@ class ProcLoader:
         if self.__path not in sys.path:
             sys.path.append(self.__path)
 
+    @staticmethod
+    def isDisabled(clazz: object): return hasattr(clazz, 'addon_proc_disabled') and clazz.addon_proc_disabled == True # type: ignore
+
     #モジュールとクラスを取得する
     def load(self, dirs: List[str]) -> List[Sequence[Union[ModuleType, object]]]:
         modules = self.load_modules(self.load_files(dirs))
