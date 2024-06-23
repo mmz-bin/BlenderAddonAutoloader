@@ -2,7 +2,7 @@ This library uses English that has been machine-translated from Japanese.
 
 __[日本語のreadmeはこちらから](README.ja.md)__
 
-# BlenderAddonAutoloader
+# Blender_Add-on_Autoloader
 This script allows for the dynamic registration and unregistration of files that make up the Blender addon. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
 
 __Note: The three files inside the core directory (addon_register.py, shortcuts_register.py, proc_loader.py) should be placed in the same directory.__
