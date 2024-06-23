@@ -19,6 +19,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_regist
 - [`priority`](#proc_loaderpy)デコレータを使うことで特定のクラスの読み込み順を制御することができます。
     - 例: `@priority(42)`
 - [`ShortcutsRegister`](#shortcuts_registerpy)クラスを使用することでショートカットキーを登録することができます。
+    - 例: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
 
 このreadmeでは以下のディレクトリ構成としてサンプルコードを記述します：
 ```
