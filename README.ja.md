@@ -221,10 +221,10 @@ from bpy.types import Context, Operator
 
 from ..core.shortcuts_register import Key, ShortcutsRegister
 
-class MMZ_OT_ToggleLang(Operator):
-    bl_idname = "mmz.toggle_lang_operator"
+class HOGE_OT_ToggleLang(Operator):
+    bl_idname = "hoge.toggle_lang_operator"
     bl_label = "Toggle Lang Operator"
-    bl_description = "言語を変更します。"
+    bl_description = "Toggle Language."
 
     def execute(self, context: Context) -> Set[str]:
         view = context.preferences.view
