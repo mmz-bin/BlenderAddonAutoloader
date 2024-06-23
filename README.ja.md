@@ -2,6 +2,8 @@ This library uses English that has been machine-translated from Japanese.
 
 __[The English readme is here](README.md)__
 
+# __このスクリプトは開発中のため、破壊的な変更が加えられる可能性があります。__
+
 # Blender_Add-on_Autoloader
 Blenderアドオンを構成するファイルの動的な登録・解除を実現するスクリプトです。
 クラスの登録・解除・無効化・優先順位付け・ショートカットキーの登録といった面倒な作業を自動で行うことができます。
