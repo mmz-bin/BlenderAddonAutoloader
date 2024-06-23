@@ -18,6 +18,7 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
     - Example: `@priority(42)`
 - Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
     - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator.bl_idname, 'A'))`
+- You can make it multilingual by using the [translation table](#addon_registerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
 
