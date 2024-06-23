@@ -29,19 +29,18 @@ def priority(pr: int): # type: ignore
 def sendMsg(type: str, msg: str) -> None: print(f"{type}: {msg}")
 
 class ProcLoader:
-    #登録対象のクラス
-    TARGET_CLASSES: object = (
+    def __init__(self, path: str, target_classes: object = (
         Operator,
         Panel,
         Menu,
         Preferences,
         PropertyGroup
-    )
-
-    def __init__(self, path: str) -> None:
+    )) -> None:
         root = dirname(path) if isfile(path) else path #指定されたパスがファイルであれば最後のフォルダまでのパスを取得する
         self.__dir_name = basename(root) #アドオンのフォルダ名       例:addon_folder
         self.__path = dirname(root)      #アドオンフォルダまでのパス 例:path/to/blender/script/
+
+        self.TARGET_CLASSES = target_classes
 
         #モジュールの検索パスに登録する
         if self.__path not in sys.path:
@@ -63,21 +62,20 @@ class ProcLoader:
         for path in paths:
             try:
                 import_module(path)
-            except ImportError or ModuleNotFoundError as e:
+            except (ImportError, ModuleNotFoundError) as e:
                 sendMsg("Warning", f'Failed to load "{path}" module. \n {e}')
 
         return [import_module(mdl) for mdl in paths] # type: ignore
 
     #モジュール内のクラスを取得する
-    @classmethod
-    def load_classes(cls, modules: List[ModuleType]) -> List[object]:
+    def load_classes(self, modules: List[ModuleType]) -> List[object]:
         cls_priority: Dict[object, int] = {}
 
         for mdl in modules:
             for clazz in getmembers(mdl, isclass):
                 clazz = clazz[1]
                 #対象のクラスがアドオンのクラスかつ無効でない場合追加する
-                if not any(issubclass(clazz, c) and not clazz == c for c in cls.TARGET_CLASSES): continue # type: ignore
+                if not any(issubclass(clazz, c) and not clazz == c for c in self.TARGET_CLASSES): continue # type: ignore
                 if hasattr(clazz, 'addon_proc_disabled') and clazz.addon_proc_disabled == True: continue # type: ignore
 
                 #優先順位とクラスを辞書に追加する
@@ -111,14 +109,14 @@ class ProcLoader:
             if basename(root) == '__pycache__': continue #キャシュフォルダはスキップする
             if self.__is_ignore_module(root, dir, ignore_mdl): continue #モジュールが無視リストに入っている場合はスキップ
 
-            ignore_mdl = ignore_mdl.union(self.__get_sub_ignore_folder(root, mdl_root, sub_dirs))
+            ignore_local = self.__get_sub_ignore_folder(root, mdl_root, sub_dirs)
 
-            modules += self.__get_all_modules(root, mdl_root, files, ignore_mdl)
+            modules += self.__get_all_modules(root, mdl_root, files, ignore_mdl, ignore_local)
 
         return modules
 
     #対象のすべてのファイルのモジュールパスを取得する
-    def __get_all_modules(self, root: str, mdl_root: str, files: List[str], ignore_mdl: Set[str]) -> List[str]:
+    def __get_all_modules(self, root: str, mdl_root: str, files: List[str], ignore_global: Set[str], ignore_local: Set[str]) -> List[str]:
         modules: List[str] = []
         for file in files:
             abs_path = join(root, file) #ファイルまでの絶対パスを取得する
@@ -129,7 +127,7 @@ class ProcLoader:
 
             #アドオンフォルダ名と指定したフォルダ名を削除し、無視リストと比較する
             rel_mdl_path = self.__get_relative_module_path(mdl_root, mdl)
-            if not rel_mdl_path in ignore_mdl: modules.append(mdl)
+            if not rel_mdl_path in ignore_global.union(ignore_local): modules.append(mdl)
 
         return modules
 
