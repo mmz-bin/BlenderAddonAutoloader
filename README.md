@@ -45,7 +45,6 @@ In this readme, the sample code is written with the following directory structur
     - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
         - The third argument is the module name (usually the `__name__` variable in the `__init__.py` file), and the fourth argument is the translation table dictionary.
     - Create an instance in the `__init__.py` file and wrap the `register()` and `unregister()` functions.
-        - The `__init__.py` file in the root directory is a sample.
     - Example
     ```
         addon = AddonRegister(__file__, ['operators', 'panels']) # Instance creation
