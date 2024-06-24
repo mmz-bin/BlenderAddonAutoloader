@@ -9,6 +9,12 @@ Blenderアドオンを構成するファイルの動的な登録・解除を実�
 クラスの登録・解除・無効化・優先順位付け・ショートカットキーの登録といった面倒な作業を自動で行うことができます。
 Blender 4.1で動作確認しています。
 
+読み込み対象のクラスは[`/core/proc_loader.py`](/core/proc_loader.py)の`ProcLoader`クラス内にある`TARGET_CLASSES`クラス変数に書いてあります。
+
+基本的なクラスは網羅しているつもりですが、抜けているものがあったらお知らせください。
+
+任意のクラスを指定することも可能です。
+
 __注意：coreディレクトリ内部にある3つのファイル(addon_manager.py, keymap_manager.py, proc_loader.py)は同じディレクトリに配置してください。__
 
 ## 機能
@@ -182,7 +188,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
         - 引数
             - `path`: アドオンへの絶対パス(通常はアドオンの__init__.pyファイルの`__file__`変数)
             - `target_classes`(オプション): 読み込み対象のクラスを指定します。
-                - 指定しなかった場合、bpy.types下の`Operator`, `Panel`, `Menu`, `Preferences`, `PropertyGroup`クラスが対象になります。
+                - 指定しなかった場合、[`/core/proc_loader.py`](/core/proc_loader.py)の`ProcLoader`クラス内にある`TARGET_CLASSES`に含まれるクラスが対象になります。
             - `is_debug_mode`(オプション)
                 - デバッグモードを指定します。(デフォルトは`False`)
                     - `False`の場合、指定したディレクトリ直下にある`debug`フォルダを無視します。
@@ -248,10 +254,10 @@ from bpy.types import Context, Operator
 
 from ..core.keymap_manager import Key, KeymapManager
 
-class HOGE_OT_Report(Operator):
-    bl_idname = "hoge.report_operator"
-    bl_label = "Report Operator"
-    bl_description = "Send information"
+class HOGE_OT_ToggleLang(Operator):
+    bl_idname = "hoge.toggle_lang_operator"
+    bl_label = "Toggle Lang Operator"
+    bl_description = "Toggle Language."
 
     def execute(self, context: Context) -> Set[str]:
         self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
@@ -259,5 +265,5 @@ class HOGE_OT_Report(Operator):
         return {"FINISHED"}
 
 def register() -> None:
-    KeymapManager().add(Key(HOGE_OT_Report, 'F1'))
+    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1'))
 ```
