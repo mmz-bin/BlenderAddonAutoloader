@@ -248,10 +248,10 @@ from bpy.types import Context, Operator
 
 from ..core.keymap_manager import Key, KeymapManager
 
-class HOGE_OT_ToggleLang(Operator):
-    bl_idname = "hoge.toggle_lang_operator"
-    bl_label = "Toggle Lang Operator"
-    bl_description = "Toggle Language."
+class HOGE_OT_Report(Operator):
+    bl_idname = "hoge.report_operator"
+    bl_label = "Report Operator"
+    bl_description = "Send information"
 
     def execute(self, context: Context) -> Set[str]:
         self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
@@ -259,5 +259,5 @@ class HOGE_OT_ToggleLang(Operator):
         return {"FINISHED"}
 
 def register() -> None:
-    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1'))
+    KeymapManager().add(Key(HOGE_OT_Report, 'F1'))
 ```
