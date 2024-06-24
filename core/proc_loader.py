@@ -1,4 +1,4 @@
-from typing import Sequence, List, Union, Dict, Set
+from typing import Sequence, List, Dict, Set
 from types import ModuleType
 
 import os
@@ -8,7 +8,7 @@ from importlib import import_module
 from inspect import getmembers, isclass
 import sys
 
-from bpy.types import Operator, Panel, Menu, Preferences, PropertyGroup
+from bpy import types
 
 class DuplicateAttributeError(Exception): pass
 
@@ -27,19 +27,27 @@ def priority(pr: int): # type: ignore
     return _priority # type: ignore
 
 class ProcLoader:
-    def __init__(self, path: str, target_classes: object = (
-        Operator,
-        Panel,
-        Menu,
-        Preferences,
-        PropertyGroup
-    ), is_debug_mode: bool = False) -> None:
+    TARGET_CLASSES: object = (
+        types.Operator, types.Panel, types.Menu, types.Header, types.UIList, types.PropertyGroup, types.AddonPreferences, types.RenderEngine, types.Node, types.NodeSocket,
+        types.NodeTree, types.Gizmo, types.GizmoGroup, types.Macro, types.OperatorFileListElement, types.OperatorProperties, types.Space, types.Region, types.KeyMap, types.KeyMapItem,
+        types.RenderSettings, types.Scene, types.Object, types.Mesh, types.Curve, types.MetaBall, types.Text, types.Sound, types.WindowManager, types.Screen,
+        types.Brush, types.DynamicPaintSurface, types.DynamicPaintBrushSettings, types.DynamicPaintCanvasSettings, types.ParticleSettings, types.ClothSettings, types.PointCache, types.KeyingSet, types.KeyingSetPath, types.TransformOrientation,
+        types.ViewLayer, types.ToolSettings, types.GPencilLayer, types.GPencilFrame, types.GPencilStroke, types.CompositorNode, types.ShaderNode, types.TextureNode, types.NodeLink, types.Material,
+        types.World, types.Armature, types.Camera, types.Lattice, types.Texture, types.Histogram, types.Scopes, types.Constraint, types.Modifier, types.RenderLayer,
+        types.RenderPass, types.Image, types.MovieClip, types.Mask, types.MaskLayer, types.MovieTrackingSettings, types.MovieTrackingObject, types.MovieTrackingMarker, types.MovieTrackingTrack,
+        types.MovieTrackingPlaneMarker, types.MovieTrackingPlaneTrack, types.MovieTrackingStabilization, types.MovieTrackingReconstruction, types.MovieTrackingCamera, types.MovieTrackingDopesheet, types.FCurve, types.Action, types.TimelineMarker, types.Area, types.RegionView3D,
+        types.SpaceView3D, types.SpaceImageEditor, types.SpaceUVEditor, types.SpaceTextEditor, types.SpaceGraphEditor, types.SpaceNLA, types.SpaceFileBrowser, types.SpaceProperties, types.SpaceInfo, types.SpaceOutliner,
+        types.SpaceSequenceEditor, types.SpaceClipEditor, types.SpaceNodeEditor, types.SpaceConsole, types.SpacePreferences, types.Event, types.Timer, types.AnimData, types.NlaStrip, types.NlaTrack, types.FModifier,
+        types.FCurveSample, types.FCurveModifiers, types.CompositorNodeTree, types.ShaderNodeTree, types.TextureNodeTree, types.GeometryNodeTree, types.OperatorMacro
+    )
+
+    def __init__(self, path: str, target_classes: object | None = None, is_debug_mode: bool = False) -> None:
         root = dirname(path) if isfile(path) else path #指定されたパスがファイルであれば最後のフォルダまでのパスを取得する
         self.__dir_name = basename(root) #アドオンのフォルダ名       例:addon_folder
         self.__path = dirname(root)      #アドオンフォルダまでのパス 例:path/to/blender/script/
         self.__is_debug_mode = is_debug_mode
 
-        self.TARGET_CLASSES = target_classes
+        if not target_classes == None: self.TARGET_CLASSES = target_classes # type: ignore
 
         #モジュールの検索パスに登録する
         if self.__path not in sys.path:
@@ -49,7 +57,7 @@ class ProcLoader:
     def isDisabled(clazz: object) -> bool: return hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True # type: ignore
 
     #モジュールとクラスを取得する
-    def load(self, dirs: List[str]) -> List[Sequence[Union[ModuleType, object]]]:
+    def load(self, dirs: List[str]) -> List[Sequence[ModuleType | object]]:
         modules = self.load_modules(self.load_files(dirs))
         return [modules, self.load_classes(modules)]
 

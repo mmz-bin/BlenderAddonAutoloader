@@ -1,4 +1,4 @@
-from typing import List, Union, Any, Dict
+from typing import List, Any, Dict
 from types import ModuleType
 
 from importlib import reload
@@ -10,8 +10,8 @@ from bpy.utils import register_class, unregister_class # type: ignore
 from bpy.app import translations
 
 class AddonManager:
-    def __init__(self, path: str, target_dirs: List[str], name: Union[str, None] = None,
-                 translation_table: Union[Dict[str, Dict[tuple[Any, Any], str]], None] = None, is_debug_mode: bool = False) -> None:
+    def __init__(self, path: str, target_dirs: List[str], name: str | None = None,
+                 translation_table: Dict[str, Dict[tuple[Any, Any], str]] | None = None, is_debug_mode: bool = False) -> None:
         self.__name = name
         self.__is_debug_mode = is_debug_mode
         self.__modules, self.__classes = ProcLoader(path, is_debug_mode=self.__is_debug_mode).load(target_dirs)

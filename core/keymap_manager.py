@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Self, List, Union
+from typing import Self, List
 
 from .proc_loader import ProcLoader
 
@@ -31,7 +31,7 @@ class KeymapManager:
         self.__shortcut_keys: List[tuple[KeyMap, KeyMapItem]] = []
 
     #ショートカットキーを追加する
-    def add(self, keys: Union[List[Key], Key],
+    def add(self, keys: List[Key] | Key,
             name: str = 'Window', space_type: str = 'EMPTY', region_type: str = 'WINDOW',
             modal: bool = False, tool: bool = False) -> List[tuple[KeyMap, KeyMapItem]]:
         if not isinstance(keys, List): keys = [keys] #リストでなければリストにする

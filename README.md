@@ -7,13 +7,19 @@ __[日本語のreadmeはこちらから](README.ja.md)__
 # Blender_Add-on_Autoloader
 This script allows for the dynamic registration and unregistration of files that make up the Blender addon. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
 
+The classes to be loaded are written in the `TARGET_CLASSES` class variable within the `ProcLoader` class in [`/core/proc_loader.py`](/core/proc_loader.py).
+
+We believe we have covered all the basic classes, but if there are any missing, please let us know.
+
+It is also possible to specify any class you want.
+
 __Note: The three files inside the core directory (addon_manager.py, keymap_manager.py, proc_loader.py) should be placed in the same directory.__
 
 ## Features
 - Registers and unregisters all addon classes within a specified directory, including subdirectories.
 - Define a list named `ignore` in the `__init__.py` of each directory to specify module names that should be ignored.
     - The module path is relative to the directory where the `__init__.py` file defining the list is located.
-        - Example (in the `__init__.py` file of the `operators` folder): `ignore = ['your_operator']`
+        - Example (in the `__init__.py` file of the `opera`tors`folder`): `ignore = ['your_operator']`
 - Use the [`disable`](#proc_loaderpy) decorator to ignore specific classes.
     - Example: `@disable`
 - Use the [`priority`](#proc_loaderpy) decorator to control the loading order of specific classes.
@@ -184,7 +190,7 @@ In this readme, the sample code is written with the following directory structur
         - Arguments
             - `path`: Absolute path to the addon (usually the `__file__` variable in the addon's `__init__.py` file)
             - `target_classes` (optional): Specifies the target classes to load.
-                - If not specified, the `Operator`, `Panel`, `Menu`, `Preferences`, and `PropertyGroup` classes under bpy.types will be targeted.
+                - If not specified, the classes included in `TARGET_CLASSES` within the `ProcLoader` class in [`/core/proc_loader.py`](/core/proc_loader.py) will be targeted.
             - `is_debug_mode` (optional)
                 - Specifies the debug mode. (The default is `False`)
                     - If `False`, it ignores the `debug` folder directly under the specified directory.
