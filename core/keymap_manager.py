@@ -63,10 +63,10 @@ class KeymapManager:
         return shortcut_keys
 
 
-    def delete(self, kms: tuple[KeyMap, KeyMapItem]) -> bool:
+    def delete(self, keymaps: tuple[KeyMap, KeyMapItem]) -> bool:
         try:
-            kms[0].keymap_items.remove(kms[1])
-            self.__shortcut_keys.remove(kms) #type: ignore
+            keymaps[0].keymap_items.remove(keymaps[1])
+            self.__shortcut_keys.remove(keymaps) #type: ignore
         except ValueError:
             return False
 
