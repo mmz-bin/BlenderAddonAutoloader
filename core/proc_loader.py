@@ -14,8 +14,8 @@ class DuplicateAttributeError(Exception): pass
 
 #このデコレータが付いている場合、そのクラスは無視されます。
 def disable(cls: object) -> object:
-    if hasattr(cls, 'addon_proc_disabled'): raise DuplicateAttributeError("The 'addon_proc_disabled' attribute is used in the 'disable' decorator.")
-    cls.addon_proc_disabled = True # type: ignore
+    if hasattr(cls, 'addon_proc_is_disabled'): raise DuplicateAttributeError("The 'addon_proc_is_disabled' attribute is used in the 'disable' decorator.")
+    cls.addon_proc_is_disabled = True # type: ignore
     return cls
 
 #このデコレータで読み込みの優先順位を付けられます。付けられなかった場合は最後になります。
@@ -46,7 +46,7 @@ class ProcLoader:
             sys.path.append(self.__path)
 
     @staticmethod
-    def isDisabled(clazz: object) -> bool: return hasattr(clazz, 'addon_proc_disabled') and clazz.addon_proc_disabled == True # type: ignore
+    def isDisabled(clazz: object) -> bool: return hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True # type: ignore
 
     #モジュールとクラスを取得する
     def load(self, dirs: List[str]) -> List[Sequence[Union[ModuleType, object]]]:
@@ -78,7 +78,7 @@ class ProcLoader:
                 clazz = clazz[1]
                 #対象のクラスがアドオンのクラスかつ無効でない場合追加する
                 if not any(issubclass(clazz, c) and not clazz == c for c in self.TARGET_CLASSES): continue # type: ignore
-                if hasattr(clazz, 'addon_proc_disabled') and clazz.addon_proc_disabled == True: continue # type: ignore
+                if hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True: continue # type: ignore
 
                 #優先順位とクラスを辞書に追加する
                 if hasattr(clazz, 'addon_proc_priority'): cls_priority[clazz] = clazz.addon_proc_priority # type: ignore
