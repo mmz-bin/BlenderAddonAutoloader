@@ -7,7 +7,7 @@ __[日本語のreadmeはこちらから](README.ja.md)__
 # Blender_Add-on_Autoloader
 This script allows for the dynamic registration and unregistration of files that make up the Blender addon. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
 
-__Note: The three files inside the core directory (addon_register.py, shortcuts_register.py, proc_loader.py) should be placed in the same directory.__
+__Note: The three files inside the core directory (addon_manager.py, keymap_manager.py, proc_loader.py) should be placed in the same directory.__
 
 ## Features
 - Registers and unregisters all addon classes within a specified directory, including subdirectories.
@@ -18,15 +18,15 @@ __Note: The three files inside the core directory (addon_register.py, shortcuts_
     - Example: `@disable`
 - Use the [`priority`](#proc_loaderpy) decorator to control the loading order of specific classes.
     - Example: `@priority(42)`
-- Use the [`ShortcutsRegister`](#shortcuts_registerpy) class to register shortcut keys.
-    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
+- Use the [`KeymapManager`](#keymap_managerpy) class to register shortcut keys.
+    - Example: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
 - Several debugging features are also included.
-    - These can be enabled using the `is_debug_mode` argument of the [`AddonRegister`](#addon_registerpy) class.
+    - These can be enabled using the `is_debug_mode` argument of the [`AddonManager`](#addon_managerpy) class.
         - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
-        - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_registerpy) method) becomes available.
+        - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_managerpy) method) becomes available.
 
 Would you like me to explain or elaborate on any part of this translation?
-- You can make it multilingual by using the [translation table](#addon_registerpy) in the standard Blender format.
+- You can make it multilingual by using the [translation table](#addon_managerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
 
@@ -36,8 +36,8 @@ In this readme, the sample code is written with the following directory structur
 └── your_addon_folder/
     ├── __init__.py
     ├── core/
-    │   ├── addon_register.py
-    │   ├── shortcuts_register.py
+    │   ├── addon_manager.py
+    │   ├── keymap_manager.py
     │   └── proc_loader.py
     ├── operators/
     │   ├── __init__.py
@@ -46,8 +46,8 @@ In this readme, the sample code is written with the following directory structur
         └── your_panel.py
 ```
 
-## addon_register.py
-- __AddonRegister__ class
+## addon_manager.py
+- __AddonManager__ class
   - This is the central class for addon registration.
     - The first argument of the constructor should be the addon folder (usually the `__file__` variable in the `__init__.py` file), and the second argument should be a list of folder names containing the respective functionalities.
     - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
@@ -55,7 +55,7 @@ In this readme, the sample code is written with the following directory structur
     - The fifth argument (`is_debug_mode`) is optional and sets the debug mode to either enabled or disabled. (The default is `False`)
         - When the debug mode is set to `False`, the `debug` folder directly under each directory specified in the second argument is ignored (if it exists).
         - If debug mode is `True`, the reload() method becomes available.
-        - Example: `addon = AddonRegister(__file__, ['operators', panels], is_debug_mode=True)`
+        - Example: `addon = AddonManager(__file__, ['operators', panels], is_debug_mode=True)`
     - Create an instance in the `__init__.py` file, and wrap the `register()` and `unregister()` methods with global functions of the same name.
 
     **`reload()` Method**
@@ -65,7 +65,7 @@ In this readme, the sample code is written with the following directory structur
 
     - Example
     ```
-        addon = AddonRegister(__file__, ['operators', 'panels']) # Instance creation
+        addon = AddonManager(__file__, ['operators', 'panels']) # Instance creation
         def register() -> None: addon.register()                 # Wrap register() function
         def unregister() -> None: addon.unregister()             # Wrap unregister() function
     ```
@@ -77,19 +77,19 @@ In this readme, the sample code is written with the following directory structur
         "ja_JP" : { ('*', 'hoge') : '日本語' }
     }
 
-    addon = AddonRegister(__file__, ['operators', 'panels'], __name__, translation_dict) # Instance creation
+    addon = AddonManager(__file__, ['operators', 'panels'], __name__, translation_dict) # Instance creation
     def register() -> None: addon.register()                                             # Wrap register() method
     def unregister() -> None: addon.unregister()                                         # Wrap unregister() method
     ```
     - Example of using debug mode
     ```
-    addon = AddonRegister(__file__, ['operators', 'panels'], is_debug_mode=True) # Instance creation
+    addon = AddonManager(__file__, ['operators', 'panels'], is_debug_mode=True) # Instance creation
     addon.reload()                                           # Reload the add-on
     def register() -> None: addon.register()                 # Wrap the register() method
     def unregister() -> None: addon.unregister()             # Wrap the unregister() method
     ```
 
-## shortcuts_register.py
+## keymap_manager.py
 - __Key__ class
     - This is a data class for storing shortcut key information.
         - `operator`: The class object that is the target of the shortcut key.
@@ -109,7 +109,7 @@ In this readme, the sample code is written with the following directory structur
         - `oskey`: OS key (default is `False`)
     - Example: `Key(HOGE_OT_YourOperator, 'A')`
 
-- __ShortcutsRegister__ class
+- __KeymapManager__ class
     - This class registers shortcut keys.
     - It adopts the singleton pattern.
 
@@ -130,7 +130,7 @@ In this readme, the sample code is written with the following directory structur
         - `modal`: Specifies whether it is in modal mode (default is `False`)
         - `tool`: Specifies whether it is in tool mode (default is `False`)
 
-    - Example: `ShortcutsRegister().add(Key(HOGE_OT_YourOperator, 'A'))`
+    - Example: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
 
     **`delete(kms)` method**
 
@@ -138,14 +138,14 @@ In this readme, the sample code is written with the following directory structur
     - It accepts a keymap and keymap item as a tuple and deletes the shortcut key.
     - It returns `True` if it is correctly deleted, and `False` if a non-existent value is specified.
 
-    - Example: `ShortcutsRegister().delete(kms)`
+    - Example: `KeymapManager().delete(kms)`
 
     **`unregister()` method**
 
     - Deletes all shortcut keys.
-    - It is automatically called within the unregister() method of the AddonRegister class, so it usually does not need to be explicitly called.
+    - It is automatically called within the unregister() method of the AddonManager class, so it usually does not need to be explicitly called.
 
-    - Example: `ShortcutsRegister().unregister()`
+    - Example: `KeymapManager().unregister()`
 
 ## proc_loader.py
 - __DuplicateAttributeError__ class
@@ -178,7 +178,7 @@ In this readme, the sample code is written with the following directory structur
         - The module path is a relative path from the directory where the `__init__.py` file defining the list is located.
             - Example (`__init__.py` file in the `operators` folder): `ignore = ['your_operator']`
     - There are no restrictions on the number of modules or classes.
-    - It is usually manipulated by the AddonRegister class, so there is no need to explicitly manipulate it.
+    - It is usually manipulated by the AddonManager class, so there is no need to explicitly manipulate it.
 
     - **`__init__(path, target_classes)` method**
         - Arguments
@@ -216,7 +216,7 @@ In this readme, the sample code is written with the following directory structur
 
 `__init__.py`
 ```
-from .core.register_addon import AddonRegister
+from .core.register_addon import AddonManager
 
 bl_info = {
     "name": "Addon_name",
@@ -228,7 +228,7 @@ bl_info = {
     "category": "General",
 }
 
-addon = AddonRegister(__file__, [
+addon = AddonManager(__file__, [
     'operators',
     'panels'
 ])
@@ -248,7 +248,7 @@ from typing import Set
 
 from bpy.types import Context, Operator
 
-from ..core.shortcuts_register import Key, ShortcutsRegister
+from ..core.keymap_manager import Key, KeymapManager
 
 class HOGE_OT_Report(Operator):
     bl_idname = "hoge.report_operator"
@@ -261,6 +261,6 @@ class HOGE_OT_Report(Operator):
         return {"FINISHED"}
 
 def register() -> None:
-    ShortcutsRegister().add(Key(HOGE_OT_Report, 'F1'))
+    KeymapManager().add(Key(HOGE_OT_Report, 'F1'))
 
 ```

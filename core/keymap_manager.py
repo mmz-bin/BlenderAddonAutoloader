@@ -21,7 +21,7 @@ class Key:
     oskey:        bool = False
 
 #ショートカットキーを登録する
-class ShortcutsRegister:
+class KeymapManager:
     #シングルトンパターン
     def __new__(cls) -> Self:
         if not hasattr(cls ,'_instance'): cls._instance = super().__new__(cls)

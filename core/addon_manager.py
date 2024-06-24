@@ -4,12 +4,12 @@ from types import ModuleType
 from importlib import reload
 
 from .proc_loader import ProcLoader
-from .shortcuts_register import ShortcutsRegister
+from .keymap_manager import KeymapManager
 
 from bpy.utils import register_class, unregister_class # type: ignore
 from bpy.app import translations
 
-class AddonRegister:
+class AddonManager:
     def __init__(self, path: str, target_dirs: List[str], name: Union[str, None] = None,
                  translation_table: Union[Dict[str, Dict[tuple[Any, Any], str]], None] = None, is_debug_mode: bool = False) -> None:
         self.__name = name
@@ -31,7 +31,7 @@ class AddonRegister:
 
         self.__call('unregister')
 
-        ShortcutsRegister().unregister()
+        KeymapManager().unregister()
         if self.__translation_table and self.__name: translations.unregister(self.__name)
 
     def reload(self) -> None:
