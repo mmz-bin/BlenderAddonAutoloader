@@ -143,8 +143,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
 
     - 例: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
 
-    **`delete(kms) -> bool`メソッド**
-    - キーマップとキーマップアイテムをタプルとして受け取り、ショートカットキーを削除します。
+    **`delete(subject) -> bool`メソッド**
+    - キーマップとキーマップアイテムのタプルまたはショートカットキーが登録されているオペレータークラスを受け取り、ショートカットキーを削除します。
     - 正しく削除されたら`True`、存在しない値を指定すると`False`が返ります。
 
     - 例: `KeymapManager().delete(kms)`

@@ -141,9 +141,8 @@ In this readme, the sample code is written with the following directory structur
 
     - Example: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
 
-    **`delete(kms)` method**
-
-    - Takes a keymap and keymap item to delete the shortcut key.
+    **`delete(subject) -> bool` method**
+    - Receives a tuple of keymap and keymap item or an operator class where shortcut keys are registered, and deletes the shortcut keys.
     - It accepts a keymap and keymap item as a tuple and deletes the shortcut key.
     - It returns `True` if it is correctly deleted, and `False` if a non-existent value is specified.
 
