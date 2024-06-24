@@ -9,7 +9,7 @@ This script allows for the dynamic registration and unregistration of files that
 
 The classes to be loaded are written in the `TARGET_CLASSES` class variable within the `ProcLoader` class in [`/core/proc_loader.py`](/core/proc_loader.py).
 
-We believe we have covered all the basic classes, but if there are any missing, please let us know.
+I believe I have covered all the basic classes, but if there are any missing, please let me know.
 
 It is also possible to specify any class you want.
 
