@@ -72,7 +72,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     **`reload()`メソッド**
     - Blenderの`script.reload`オペレータが実行された際に、アドオン全体を再読込します。
     - デバッグ用の機能で、コンストラクタの`is_debug_mode`引数が`True`に設定されている場合のみ動作します。`False`の場合は何もしません。
-    - 使用する場合、`__init__.py`ファイル内でこのメソッドを呼び出すようにしてください。
+    - 自動的に呼び出されるため、通常は明示的に呼び出す必要はありません。
 
     - 例
     ```
@@ -96,7 +96,6 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     - デバッグモードを使用する例
     ```
     addon = AddonManager(__file__, ['operators', 'panels'], is_debug_mode=True) #インスタンス生成
-    addon.reload()                                           #アドオンを再読込する
     def register() -> None: addon.register()                 #register()メソッドをラップ
     def unregister() -> None: addon.unregister()             #unregister()メソッドをラップ
     ```

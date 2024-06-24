@@ -71,7 +71,7 @@ In this readme, the sample code is written with the following directory structur
     **`reload()` Method**
     - When the Blender's `script.reload` operator is executed, it reloads the entire add-on.
     - This is a debugging feature and only works if the `is_debug_mode` argument in the constructor is set to `True`. It does nothing if `False`.
-    - If you want to use it, please call this method in the `__init__.py` file.
+    - It is called automatically, so you normally don't need to call it explicitly.
 
     - Example
     ```
@@ -94,7 +94,6 @@ In this readme, the sample code is written with the following directory structur
     - Example of using debug mode
     ```
     addon = AddonManager(__file__, ['operators', 'panels'], is_debug_mode=True) # Instance creation
-    addon.reload()                                           # Reload the add-on
     def register() -> None: addon.register()                 # Wrap the register() method
     def unregister() -> None: addon.unregister()             # Wrap the unregister() method
     ```

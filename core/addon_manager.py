@@ -17,6 +17,8 @@ class AddonManager:
         self.__modules, self.__classes = ProcLoader(path, is_debug_mode=self.__is_debug_mode).load(target_dirs, cat_name)
         self.__translation_table = translation_table
 
+        self.reload()
+
     def register(self) -> None:
         for cls in self.__classes:
             register_class(cls)
