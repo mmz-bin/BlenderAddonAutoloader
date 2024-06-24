@@ -200,9 +200,11 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
                     - `False`の場合、指定したディレクトリ直下にある`debug`フォルダを無視します。
         - 例: `pl = ProcLoader(__file__)`
 
-    - **`load(dirs) -> List[Sequence[Union[ModuleType, object]]]`メソッド**
+    - **`load(dirs, cat_name) -> List[Sequence[Union[ModuleType, object]]]`メソッド**
         - 読み込んだモジュールとクラスをリストで返します。
-        - 引数: `dirs`: 読み込み対象のディレクトリを指定します。
+        - 引数
+            - `dirs`: 読み込み対象のディレクトリを指定します。
+            - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`の初期値を設定します。
         - 例: `modules, classes = pl.load(['operators', 'panels'])`
 
     - **`load_files(dirs) -> List[str]`メソッド**
@@ -216,10 +218,12 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
         - 引数: `paths`: 読み込むモジュールへのパスを指定します。
         - 例: `modules = pl.load_module(module_path)`
 
-    - **`load_classes(modules) -> List[object]`メソッド**
+    - **`load_classes(modules, cat_name) -> List[object]`メソッド**
         - 渡されたモジュール内に存在するクラスを読み込みます。
         - `disable`や`priority`デコレータを元に、クラスオブジェクトをソートします。
-        - 引数: `modules`: 対象のモジュールを指定します。
+        - 引数
+            - `modules`: 対象のモジュールを指定します。
+            - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`の初期値を設定します。
         - 例: `classes = pl.load_classes(modules)`
 
 # サンプル

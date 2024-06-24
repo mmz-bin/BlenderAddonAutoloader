@@ -200,9 +200,11 @@ In this readme, the sample code is written with the following directory structur
                     - If `False`, it ignores the `debug` folder directly under the specified directory.
         - Example: `pl = ProcLoader(__file__)`
 
-    - **`load(dirs) -> List[Sequence[Union[ModuleType, object]]]` method**
+    - **`load(dirs, cat_name) -> List[Sequence[Union[ModuleType, object]]]` method**
         - Returns a list of loaded modules and classes.
-        - Argument: `dirs`: Specifies the directories to load.
+        - Arguments
+            - `dirs`: Specifies the directories to load.
+            - `cat_name`(optional): Sets the initial value of `bl_category` for classes inheriting from `bpy.types.Panel`.
         - Example: `modules, classes = pl.load(['operators', 'panels'])`
 
     - **`load_files(dirs) -> List[str]` method**
@@ -216,10 +218,12 @@ In this readme, the sample code is written with the following directory structur
         - Argument: `paths`: Specifies the paths to the modules to load.
         - Example: `modules = pl.load_module(module_path)`
 
-    - **`load_classes(modules) -> List[object]` method**
+    - **`load_classes(modules, cat_name) -> List[object]` method**
         - Loads the classes within the given modules.
         - Sorts the class objects based on the `disable` and `priority` decorators.
-        - Argument: `modules`: Specifies the target modules.
+        - Arguments
+            - `modules`: Specifies the target modules.
+            - `cat_name`(optional): Sets the initial value of `bl_category` for classes inheriting from `bpy.types.Panel`.
         - Example: `classes = pl.load_classes(modules)`
 
 # Sample
