@@ -64,7 +64,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
             - `name`(オプション): アドオン名(通常は`__init__.py`ファイルの`__name__変数`)翻訳テーブルを使用する際に必要になります。
             - `translation_table`(オプション): 翻訳テーブル(Blenderの標準形式)
             - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`を自動で設定したい場合に使用します。
-            - `is_debug_mode`(オプション): デバッグモードを指定します。
+            - `is_debug_mode`(オプション): デバッグモードを指定します。(デフォルトは`False`)
                 - `False`を指定すると`target_dirs`で指定したディレクトリの直下にある`debug`フォルダが無視されるようになります。
                 - `True`を指定すると`reload()`メソッドが使えるようになります。
     - `__init__.py`ファイルでインスタンスを生成し、`register()`メソッドと`unregister()`メソッドを同名のグローバル関数でラップしてください。
