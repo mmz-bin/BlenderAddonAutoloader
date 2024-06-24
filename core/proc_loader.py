@@ -57,9 +57,9 @@ class ProcLoader:
     def isDisabled(clazz: object) -> bool: return hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True # type: ignore
 
     #モジュールとクラスを取得する
-    def load(self, dirs: List[str]) -> List[Sequence[ModuleType | object]]:
+    def load(self, dirs: List[str], cat_name: str | None = None) -> List[Sequence[ModuleType | object]]:
         modules = self.load_modules(self.load_files(dirs))
-        return [modules, self.load_classes(modules)]
+        return [modules, self.load_classes(modules, cat_name)]
 
     #[アドオン名].[フォルダ名].[ファイル名]の形でモジュール名を取得する
     def load_files(self, dirs: List[str]) -> List[str]:
@@ -78,7 +78,7 @@ class ProcLoader:
         return [import_module(mdl) for mdl in paths] # type: ignore
 
     #モジュール内のクラスを取得する
-    def load_classes(self, modules: List[ModuleType]) -> List[object]:
+    def load_classes(self, modules: List[ModuleType], cat_name: str | None = None) -> List[object]:
         cls_priority: Dict[object, int] = {}
 
         for mdl in modules:
@@ -94,7 +94,8 @@ class ProcLoader:
 
         #優先順位を元にソートする(数が小さいほど先、-1(0以下)は最後)
         sorted_classes = sorted(cls_priority.items(), key=lambda item: float('inf') if item[1] < 0 else item[1])
-        return [item[0] for item in sorted_classes]
+
+        return self.__add_attribute(sorted_classes, cat_name)
 
     #検索対象のすべてのフォルダのモジュールを読み込む処理を行う
     def __search_target_dirs(self, dirs: List[str], addon_path: str) -> List[str]:
@@ -170,6 +171,14 @@ class ProcLoader:
     def __get_relative_path(self, abs_path: str): return abs_path.replace(self.__path, '').lstrip(os.sep)          #絶対パスを受け取り、アドオンフォルダからの相対パスを取得する
     def __conv_module_path(self, path: str): return self.__sep_to_period(splitext(path)[0])                        #ファイルパスをモジュールパスの形に変換する
 
+    def __add_attribute(self, classes: List[tuple[object, int]], cat_name: str | None) -> List[object]:
+        for cls in classes:
+            cls = cls[0]
+            if not hasattr(cls, 'bl_idname'): cls.bl_idname = cls.__name__ # type: ignore
+            if cat_name and issubclass(cls, types.Panel) and not hasattr(cls, 'bl_category'): cls.bl_category = cat_name # type: ignore
+
+        return [item[0] for item in classes]
+
     @staticmethod
     def __sep_to_period(string: str) -> str: return string.replace(os.sep, '.')
 
@@ -184,8 +193,5 @@ class ProcLoader:
             rel = '.'.join(rel_parts[rel_parts.index(dir)+1:])
         except IndexError:
             rel = ""
-
-        for i in ignore_module:
-            print(i)
 
         return not rel == "" and rel in ignore_module

@@ -26,6 +26,8 @@ __Note: The three files inside the core directory (addon_manager.py, keymap_mana
     - Example: `@priority(42)`
 - Use the [`KeymapManager`](#keymap_managerpy) class to register shortcut keys.
     - Example: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
+- You can omit `bl_idname`, and if omitted, the class name will be automatically assigned. (Please set it explicitly if there is a conflict with the class name.)
+- For classes inheriting from `bpy.types.Panel`, you can omit the `bl_category` attribute by setting an arbitrary name in the constructor of [`AddonManager`](#addon_managerpy).
 - Several debugging features are also included.
     - These can be enabled using the `is_debug_mode` argument of the [`AddonManager`](#addon_managerpy) class.
         - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
@@ -54,14 +56,16 @@ In this readme, the sample code is written with the following directory structur
 
 ## addon_manager.py
 - __AddonManager__ class
-  - This is the central class for addon registration.
-    - The first argument of the constructor should be the addon folder (usually the `__file__` variable in the `__init__.py` file), and the second argument should be a list of folder names containing the respective functionalities.
-    - The third and fourth arguments are optional; they automatically register and unregister by passing the module name and Blender's standard translation table.
-        - The third argument is the module name (usually the `__name__` variable in the `__init__.py` file), and the fourth argument is the translation table dictionary.
-    - The fifth argument (`is_debug_mode`) is optional and sets the debug mode to either enabled or disabled. (The default is `False`)
-        - When the debug mode is set to `False`, the `debug` folder directly under each directory specified in the second argument is ignored (if it exists).
-        - If debug mode is `True`, the reload() method becomes available.
-        - Example: `addon = AddonManager(__file__, ['operators', panels], is_debug_mode=True)`
+    - **`__init__(path, target_dirs, name, translation_table, cat_name, is_debug_mode)` method**
+        - Arguments:
+            - `path`: The path to the addon folder (usually the `__file__` variable in the `__init__.py` file).
+            - `target_dirs`: The directories to be loaded (must be directly under the addon folder).
+            - `name` (optional): The addon name (usually the `__name__` variable in the `__init__.py` file), necessary when using the translation table.
+            - `translation_table` (optional): The translation table (Blender standard format).
+            - `cat_name` (optional): Used to automatically set the `bl_category` of classes inheriting from `bpy.types.Panel`.(If you set it explicitly it will take precedence.)
+            - `is_debug_mode` (optional): Specifies debug mode.
+                - If `False` is specified, the `debug` folder directly under the directories specified in `target_dirs` will be ignored.
+                - If `True` is specified, the `reload()` method becomes available.
     - Create an instance in the `__init__.py` file, and wrap the `register()` and `unregister()` methods with global functions of the same name.
 
     **`reload()` Method**

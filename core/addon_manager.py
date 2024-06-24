@@ -11,10 +11,10 @@ from bpy.app import translations
 
 class AddonManager:
     def __init__(self, path: str, target_dirs: List[str], name: str | None = None,
-                 translation_table: Dict[str, Dict[tuple[Any, Any], str]] | None = None, is_debug_mode: bool = False) -> None:
+                 translation_table: Dict[str, Dict[tuple[Any, Any], str]] | None = None, cat_name: str | None = None, is_debug_mode: bool = False) -> None:
         self.__name = name
         self.__is_debug_mode = is_debug_mode
-        self.__modules, self.__classes = ProcLoader(path, is_debug_mode=self.__is_debug_mode).load(target_dirs)
+        self.__modules, self.__classes = ProcLoader(path, is_debug_mode=self.__is_debug_mode).load(target_dirs, cat_name)
         self.__translation_table = translation_table
 
     def register(self) -> None:

@@ -28,6 +28,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     - 例: `@priority(42)`
 - [`KeymapManager`](#keymap_managerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
+- `bl_idname`を省略でき、省略した場合は自動的にクラス名が割り当てられます。(クラス名が競合する際は明示的に設定してください。)
+- `bpy.types.Panel`を継承したクラスの場合、[`AddonManager`](#addon_managerpy)のコンストラクタで任意の名前を設定することで`bl_category`属性を省略できます。(明示的に設定した場合はそれが優先されます。)
 - デバッグ向けの機能もいくつか搭載されています。
     - [`AddonManager`](#addon_managerpy)クラスの`is_debug_mode`引数によって有効化できます。
         - 無効にすると、各ディレクトリ直下に`debug`ディレクトリが存在する場合、その中にあるモジュールが無視されます。
@@ -55,13 +57,16 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
 ## addon_manager.py
 - __AddonManager__ クラス
   - アドオンの登録を行う中心的なクラスです。
-    - コンストラクタの第一引数にはアドオンフォルダ(通常は`__init__.py`ファイルの`__file__`変数)、第二引数には各機能のファイルが含まれるフォルダ名をリストで渡してください。
-    - 第三・第四引数はオプションで、モジュール名とBlenderの標準形式の翻訳テーブルを渡すことで自動で登録・解除します。
-        - 第三引数にはモジュール名(通常は`__init__.py`ファイルの`__name__`変数)、第四引数には翻訳テーブルの辞書を渡してください
-    - 第五引数(`is_debug_mode`)もオプションで、デバッグモードの有効と無効を設定します。(デフォルトは`False`)
-        - デバッグモードが`False`の場合、第二引数で指定した各ディレクトリ直下の`debug`フォルダが無視されます。(存在する場合)
-        - デバッグモードが`True`の場合、reload()メソッドが使用できるようになります。
-        - 例: `addon = AddonManager(__file__, ['operators', panels], is_debug_mode=True)`
+    - **`__init__(path, target_dirs, name, translation_table, cat_name, is_debug_mode)` メソッド**
+        - 引数
+            - `path`: アドオンフォルダへのパス(通常は`__init__.py`ファイルの`__file__`変数)
+            - `target_dirs`: 読み込みの対象となるディレクトリ(アドオンフォルダの直下にある必要があります。)
+            - `name`(オプション): アドオン名(通常は`__init__.py`ファイルの`__name__変数`)翻訳テーブルを使用する際に必要になります。
+            - `translation_table`(オプション): 翻訳テーブル(Blenderの標準形式)
+            - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`を自動で設定したい場合に使用します。
+            - `is_debug_mode`(オプション): デバッグモードを指定します。
+                - `False`を指定すると`target_dirs`で指定したディレクトリの直下にある`debug`フォルダが無視されるようになります。
+                - `True`を指定すると`reload()`メソッドが使えるようになります。
     - `__init__.py`ファイルでインスタンスを生成し、`register()`メソッドと`unregister()`メソッドを同名のグローバル関数でラップしてください。
 
     **`reload()`メソッド**
@@ -87,6 +92,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     def register() -> None: addon.register()                                             #register()関数をラップ
     def unregister() -> None: addon.unregister()                                         #unregister()関数をラップ
     ```
+
     - デバッグモードを使用する例
     ```
     addon = AddonManager(__file__, ['operators', 'panels'], is_debug_mode=True) #インスタンス生成
