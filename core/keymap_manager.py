@@ -9,6 +9,9 @@ from bpy.types import KeyMap, KeyMapItem
 #ショートカットキーの情報
 @dataclass
 class Key:
+    """Hold information for registering to the keymap
+    """
+
     operator:     object         #オペレーターのクラスオブジェクト
     key:          str            #対象のキー
     key_modifier: str  = 'NONE'  #追加のキー
@@ -22,8 +25,13 @@ class Key:
 
 #ショートカットキーを登録する
 class KeymapManager:
+    """Manage the keymap.
+    """
+
     #シングルトンパターン
     def __new__(cls) -> Self:
+        """Always return the same instance.
+        """
         if not hasattr(cls ,'_instance'): cls._instance = super().__new__(cls)
         return cls._instance
 
@@ -37,6 +45,20 @@ class KeymapManager:
     def add(self, keys: List[Key] | Key,
             name: str = 'Window', space_type: str = 'EMPTY', region_type: str = 'WINDOW',
             modal: bool = False, tool: bool = False) -> List[tuple[KeyMap, KeyMapItem]]:
+        """Add keymaps
+
+        Args:
+            keys (List[Key] | Key): Information of key to register.
+            name (str, optional): keymap identifier. Defaults to 'Window'.
+            space_type (str, optional): keymap's valid space and range. Defaults to 'EMPTY'.
+            region_type (str, optional): _description_. Defaults to 'WINDOW'.
+            modal (bool, optional): presence of modal modes. Defaults to False.
+            tool (bool, optional): presence of tool modes. Defaults to False.
+
+        Returns:
+            List[tuple[KeyMap, KeyMapItem]]: Registered key's keymap and keymap items
+        """
+
         if not isinstance(keys, List): keys = [keys] #リストでなければリストにする
 
         key_config = context.window_manager.keyconfigs.addon #キーコンフィグ
@@ -65,21 +87,35 @@ class KeymapManager:
 
         return shortcut_keys
 
-    def delete(self, subject: tuple[KeyMap, KeyMapItem] | object):
+    def delete(self, subject: tuple[KeyMap, KeyMapItem] | object) -> bool:
+        """Delete the keymap.
+
+        Args:
+            subject (tuple[KeyMap, KeyMapItem] | object): Pair of keymap and item or operator to be deleted.
+
+        Returns:
+            bool: Whether the target for deletion existed or not.
+        """
+
         if type(subject) == tuple[KeyMap, KeyMapItem]:
             try:
                 subject[0].keymap_items.remove(subject[1])
                 self.__shortcut_keys.remove(subject) #type: ignore
+                return True
             except ValueError:
                 return False
         else:
+            is_deleted = False
             for keymap, keymap_item in self.__shortcut_keys:
-                if not keymap_item == subject[1]: continue # type: ignore
+                if not keymap_item.idname == subject.bl_idname: continue  # type: ignore
                 keymap.keymap_items.remove(keymap_item)
-                return True
-            return False
+                is_deleted = True
+            return is_deleted
 
     def unregister(self):
+        """Delete all keymaps registered in this class.
+        """
+
         for kms in self.__shortcut_keys:
             self.delete(kms)
 
