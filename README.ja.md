@@ -28,7 +28,7 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     - 例: `@priority(42)`
 - [`KeymapManager`](#keymap_managerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
-- [`PropertiesManager`](#properties_managerpy)クラスを使用することでプロパティグループを登録・参照することができます。(初期の構成では`AddonManager`クラスの`addon_name`引数が必要になります。)
+- [`PropertiesManager`](#properties_managerpy)クラスを使用することでプロパティグループを登録・参照・解除することができます。(初期の構成では`AddonManager`クラスの`addon_name`引数が必要になります。)
     - 例
         - プロパティの登録: `PropertiesManager().add(Scene, [("your_properties", YourPropertyGroupClass)])`
         - プロパティの参照: `prop = PropertiesManager().get(bpy.context.scene, "your_properties")`
