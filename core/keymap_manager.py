@@ -28,6 +28,9 @@ class KeymapManager:
         return cls._instance
 
     def __init__(self):
+        if self.__isInitialized: return
+        self.__isInitialized = True
+
         self.__shortcut_keys: List[tuple[KeyMap, KeyMapItem]] = []
 
     #ショートカットキーを追加する
@@ -71,7 +74,7 @@ class KeymapManager:
                 return False
         else:
             for keymap, keymap_item in self.__shortcut_keys:
-                if not keymap_item.idname == subject.bl_idname: continue # type: ignore
+                if not keymap_item == subject[1]: continue # type: ignore
                 keymap.keymap_items.remove(keymap_item)
                 return True
             return False
@@ -81,3 +84,5 @@ class KeymapManager:
             self.delete(kms)
 
         self.__shortcut_keys.clear()
+
+    __isInitialized = False

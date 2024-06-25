@@ -28,6 +28,10 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     - 例: `@priority(42)`
 - [`KeymapManager`](#keymap_managerpy)クラスを使用することでショートカットキーを登録することができます。
     - 例: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
+- [`PropertiesManager`](#properties_managerpy)クラスを使用することでプロパティグループを登録・参照することができます。
+    - 例
+        - プロパティの登録: `PropertiesManager().add(Scene, [("your_properties", YourPropertyGroupClass)])`
+        - プロパティの参照: `prop = PropertiesManager().get(bpy.context.scene, "your_properties")`
 - `bl_idname`を省略でき、省略した場合は自動的にクラス名が割り当てられます。(クラス名が競合する際は明示的に設定してください。)
 - `bpy.types.Panel`を継承したクラスの場合、[`AddonManager`](#addon_managerpy)のコンストラクタで任意の名前を設定することで`bl_category`属性を省略できます。(明示的に設定した場合はそれが優先されます。)
 - デバッグ向けの機能もいくつか搭載されています。
@@ -57,11 +61,11 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
 ## addon_manager.py
 - __AddonManager__ クラス
   - アドオンの登録を行う中心的なクラスです。
-    - **`__init__(path, target_dirs, name, translation_table, cat_name, is_debug_mode)` メソッド**
+    - **`__init__(path, target_dirs, addon_name, translation_table, cat_name, is_debug_mode)` メソッド**
         - 引数
             - `path`: アドオンフォルダへのパス(通常は`__init__.py`ファイルの`__file__`変数)
             - `target_dirs`: 読み込みの対象となるディレクトリ(アドオンフォルダの直下にある必要があります。)
-            - `name`(オプション): アドオン名(通常は`__init__.py`ファイルの`__name__変数`)翻訳テーブルを使用する際に必要になります。
+            - `addon_name`(オプション): アドオン名(通常は`__init__.py`ファイルの`__name__変数`)翻訳テーブルやプロパティを使用する際に必要になります。
             - `translation_table`(オプション): 翻訳テーブル(Blenderの標準形式)
             - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`を自動で設定したい場合に使用します。
             - `is_debug_mode`(オプション): デバッグモードを指定します。(デフォルトは`False`)
@@ -155,6 +159,80 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     - AddonManagerクラスのunregister()メソッド内で自動的に呼び出されるため、通常は明示的に呼び出す必要はありません。
 
     - 例: `KeymapManager().unregister()`
+
+## properties_manager.py
+- __PropertiesManager__ クラス
+    - シングルトンパターンを採用しています。
+    - プロパティグループ(`bpy.types.PropertyGroup`を継承しているクラス)の登録・解除・参照を行います。
+    - `disable`デコレータが着いているクラスは無視されます。
+    - 他のアドオンとの名前の衝突を避けるため、自動でプロパティ名に接頭辞を追加します。(`get()`メソッドを使う場合は意識する必要はありません。)
+
+    - **`set_name(name)` メソッド**
+        - プロパティにつける接頭辞を指定します。
+        - 一度値を指定すると、再指定できなくなります。
+        - 初期の構成では`__init__.py`ファイルの`__name__`変数([`AddonManager`](#addon_managerpy)のコンストラクタの`addon_name`引数)として設定されます。
+    - **`add(prop_type, properties) -> List[str]` メソッド**
+        - プロパティを追加します。
+        - `set_name()`メソッドで指定した接頭辞(`[接頭辞]_[プロパティ名]`の形)が付けられます。
+            - 引数
+                - `prop_type`: プロパティを追加する対象のクラスを指定します。
+                - `properties`: `(プロパティ名, 登録するオペレーター)`の形式のタプルもしくはタプルのリストを受け取ります。
+            - 戻り値: 追加したプロパティ名(リネーム済みのもの)
+            - 例: `PropertiesManager().add(Scene, [("your_properties", YourPropertyGroupClass)])`
+    - **`get(context, attr, is_mangling) -> Any` メソッド**
+        - プロパティ名を取得します。
+        - 指定した名前のプロパティが存在しない場合は`ValueError`が発生します。
+        - デフォルトでは、`set_name()`メソッドで指定した接頭辞がついている場合はそのまま、ついていない場合は追加して取得します。
+            - 引数
+                - `context`: プロパティを取得する対象のオブジェクト
+                - `attr`: 取得する属性名
+                - `is_mangling`(オプション): `attr`引数に規定の接頭辞がない場合の名前の修正を有効にするかを指定します。(デフォルトは`True`)
+            - 戻り値
+                - 取得したプロパティ
+            - 例: `prop = PropertiesManager().get(bpy.context.scene, "your_properties")`
+    - **`delete(prop_name) -> bool` メソッド**
+        - 指定した名前のプロパティを削除します。
+        - プロパティが存在すれば`True`、存在しなければ`False`を返します
+            - 引数: `prop_name`: 削除したいプロパティ名
+        - 例: - 例: `PropertiesManager().delete("your_properties")`
+    - **`unregister()` メソッド**
+        - 登録されているすべてのプロパティを削除します。
+        - 通常は`AddonManager`によって自動的に呼び出されるため、明示的に呼び出す必要はありません。
+    - 例
+        - プロパティを登録する
+        ```
+        from ..core.properties_manager import PropertiesManager
+
+        from bpy.types import PropertyGroup
+        from bpy.props import BoolProperty
+
+        from bpy.types import Scene
+
+        class Hoge_Properties(PropertyGroup):
+            bl_idname = "Hoge_Properties"
+            bl_label = "sample"
+
+            fuga: BoolProperty(name="piyo", default=False)
+
+        def register() -> None:
+            PropertiesManager().add(Scene, [("hoge", Hoge_Properties)])
+
+        ```
+        - プロパティを参照する
+        ```
+        from bpy.types import Panel, Context, Scene
+
+        from ..core.properties_manager import PropertiesManager
+
+        class MMZ_PT_Prop(Panel):
+            bl_label = "Property Test"
+            bl_space_type = "VIEW_3D"
+            bl_region_type = "UI"
+
+            def draw(self, context: Context):
+                prop = PropertiesManager().get(context.scene, "hoge")
+                self.layout.label(text= f"fuga = {prop.fuga}")
+        ```
 
 ## proc_loader.py
 - __DuplicateAttributeError__ クラス

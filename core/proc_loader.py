@@ -8,9 +8,10 @@ from importlib import import_module
 from inspect import getmembers, isclass
 import sys
 
-from bpy import types
+from .utilities.gen_msg import MsgType, gen_msg
+from .exceptions import DuplicateAttributeError
 
-class DuplicateAttributeError(Exception): pass
+from bpy import types
 
 #このデコレータが付いている場合、そのクラスは無視されます。
 def disable(cls: object) -> object:
@@ -73,7 +74,7 @@ class ProcLoader:
             try:
                 import_module(path)
             except (ImportError, ModuleNotFoundError) as e:
-                print(f'ProcLoader: Warning: Failed to load "{path}" module. \n {e}')
+                print(gen_msg(ProcLoader, MsgType.ERROR, f'ProcLoader: Warning: Failed to load "{path}" module. \n {e}'))
 
         return [import_module(mdl) for mdl in paths] # type: ignore
 
