@@ -26,7 +26,7 @@ __Note: The three files inside the core directory (addon_manager.py, keymap_mana
     - Example: `@priority(42)`
 - Use the [`KeymapManager`](#keymap_managerpy) class to register shortcut keys.
     - Example: `KeymapManager().add(Key(HOGE_OT_YourOperator, 'A'))`
-- You can register and reference property groups using the [`PropertiesManager`](#properties_managerpy) class.
+- You can register and reference property groups using the [`PropertiesManager`](#properties_managerpy) class.(The initial configuration requires the `addon_name` argument of the `AddonManager` class.)
     - Example
         - Registering a property: `PropertiesManager().add(Scene, [("your_properties", YourPropertyGroupClass)])`
         - Referencing a property: `prop = PropertiesManager().get(bpy.context.scene, "your_properties")`
