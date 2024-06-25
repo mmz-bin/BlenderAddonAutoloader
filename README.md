@@ -50,7 +50,8 @@ In this readme, the sample code is written with the following directory structur
     ├── core/
     │   ├── addon_manager.py
     │   ├── keymap_manager.py
-    │   └── proc_loader.py
+    │   ├── proc_loader.py
+    │   └── properties_manager.py
     ├── operators/
     │   ├── __init__.py
     │   └── your_operator.py

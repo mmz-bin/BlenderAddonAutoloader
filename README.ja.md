@@ -50,7 +50,8 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
     ├── core/
     │   ├── addon_manager.py
     │   ├── keymap_manager.py
-    │   └── proc_loader.py
+    │   ├── proc_loader.py
+    │   └── properties_manager.py
     ├── operators/
     │   ├── __init__.py
     │   └── your_operator.py
