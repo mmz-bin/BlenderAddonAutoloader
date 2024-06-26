@@ -207,12 +207,12 @@ class ProcLoader:
 
             ignore_local = self.__get_sub_ignore_folder(root, mdl_root, sub_dirs)
 
-            modules += self.__get_all_modules(root, mdl_root, files, ignore_mdl, ignore_local)
+            modules += self.__get_all_modules(root, mdl_root, files, ignore_mdl.union(ignore_local))
 
         return modules
 
     #対象のすべてのファイルのモジュールパスを取得する
-    def __get_all_modules(self, root: str, mdl_root: str, files: List[str], ignore_global: Set[str], ignore_local: Set[str]) -> List[str]:
+    def __get_all_modules(self, root: str, mdl_root: str, files: List[str], ignore_mdl: Set[str]) -> List[str]:
         """Retrieve modules in sub-folders.
 
         Args:
@@ -235,7 +235,7 @@ class ProcLoader:
 
             #アドオンフォルダ名と指定したフォルダ名を削除し、無視リストと比較する
             rel_mdl_path = self.__get_relative_module_path(mdl_root, mdl)
-            if not rel_mdl_path in ignore_global.union(ignore_local): modules.append(mdl)
+            if not rel_mdl_path in ignore_mdl: modules.append(mdl)
 
         return modules
 
