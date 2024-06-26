@@ -281,7 +281,7 @@ class ProcLoader:
         if not exists(init_path): return set([])
 
         init_mdl = import_module(self.__get_module_path(init_path))
-        if hasattr(init_mdl, 'ignore'): return set(init_mdl.ignore)
+        if hasattr(init_mdl, identifier): return set(init_mdl.ignore)
 
         return set([])
 
