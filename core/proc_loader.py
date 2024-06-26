@@ -1,3 +1,7 @@
+#This program is distributed under the MIT License.
+#See the LICENSE file for details.
+
+
 from typing import Sequence, List, Dict, Set
 from types import ModuleType
 
@@ -28,7 +32,7 @@ def priority(pr: int): # type: ignore
     return _priority # type: ignore
 
 class ProcLoader:
-    """_summary_
+    """Loads modules and addon classes.
 
     Attributes:
         DEFAULT_TARGET_CLASSES (object): Default classes for loading
@@ -178,7 +182,7 @@ class ProcLoader:
             cur_path = join(addon_path, dir)
             if not exists(cur_path) or isfile(cur_path): raise NotADirectoryError(f'"{cur_path}" is not a folder or does not exist.')
 
-            ignore_mdl = self.__read_ignore_module(cur_path) #指定したフォルダからの相対パスの形
+            ignore_mdl = self.__read_module_attr(cur_path, 'ignore') #指定したフォルダからの相対パスの形
             if not self.__is_debug_mode: ignore_mdl = ignore_mdl.union(set(('debug', )))
             mdl_root = join(self.__dir_name, dir)            #[アドオンフォルダ]/[現在のフォルダ]
 
@@ -254,7 +258,7 @@ class ProcLoader:
         ignore_list: Set[str] = set([])
         for sub in sub_dirs:
             abs_path = join(root, sub)
-            ignore = set([self.__get_relative_path(join(abs_path, item.replace('.', os.sep))) for item in self.__read_ignore_module(abs_path)]) #モジュールパスから相対パスを生成する
+            ignore = set([self.__get_relative_path(join(abs_path, item.replace('.', os.sep))) for item in self.__read_module_attr(abs_path, 'ignore')]) #モジュールパスから相対パスを生成する
             ignore = set([self.__sep_to_period(item) for item in ignore if not basename(item.rstrip(os.sep)) == '__pycache__'])                  #相対パスをモジュールパスに変換し、システムフォルダを除外する
             ignore = set([self.__get_relative_module_path(mdl_root, item) for item in ignore])                                                   #相対モジュールパスを取得する
 
@@ -263,14 +267,14 @@ class ProcLoader:
         return set(ignore_list)
 
     #各ディレクトリの__init__.pyファイルから無視リストを取得する
-    def __read_ignore_module(self, cur_path: str) -> Set[str]:
-        """Retrieve ignore list if 'init.py' exists in sub-folder
+    def __read_module_attr(self, cur_path: str, identifier: str) -> Set[str]:
+        """Retrieve list if 'init.py' exists in sub-folder
 
         Args:
             cur_path (str): Directory with 'init.py' file
 
         Returns:
-            Set[str]: Ignore list
+            Set[str]: Modules list
         """
         init_path = join(cur_path, '__init__.py')
 
