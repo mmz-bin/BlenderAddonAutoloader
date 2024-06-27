@@ -1,3 +1,6 @@
+#This program is distributed under the MIT License.
+#See the LICENSE file for details.
+
 from typing import List, Any, Dict
 from types import ModuleType
 
@@ -47,7 +50,7 @@ class AddonManager:
     def unregister(self) -> None:
         """Unregister the add-on class and each function
         """
-        for cls in self.__classes:
+        for cls in reversed(self.__classes):
             unregister_class(cls)
 
         self.__call('unregister')
