@@ -7,7 +7,7 @@ __[日本語のreadmeはこちらから](README.ja.md)__
 # Blender_Add-on_Autoloader
 This script allows for the dynamic registration and unregistration of files that make up the Blender addon. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
 
-The classes to be loaded are written in the `TARGET_CLASSES` class variable within the `ProcLoader` class in [`/core/proc_loader.py`](/core/proc_loader.py).
+The classes to be loaded are written in the `TARGET_CLASSES` class variable within the `ProcLoader` class in [`/manager/core/proc_loader.py`](/manager/core/proc_loader.py).
 
 I believe I have covered all the basic classes, but if there are any missing, please let me know.
 
@@ -201,7 +201,7 @@ In this readme, the sample code is written with the following directory structur
     - Example
         - Registering a property
         ```
-        from ..core.properties_manager import PropertiesManager
+        from ..manager.core.properties_manager import PropertiesManager
 
         from bpy.types import PropertyGroup
         from bpy.props import BoolProperty
@@ -222,7 +222,7 @@ In this readme, the sample code is written with the following directory structur
         ```
         from bpy.types import Panel, Context, Scene
 
-        from ..core.properties_manager import PropertiesManager
+        from ..manager.core.properties_manager import PropertiesManager
 
         class MMZ_PT_Prop(Panel):
             bl_label = "Property Test"
@@ -271,7 +271,7 @@ In this readme, the sample code is written with the following directory structur
         - Arguments
             - `path`: Absolute path to the addon (usually the `__file__` variable in the addon's `__init__.py` file)
             - `target_classes` (optional): Specifies the target classes to load.
-                - If not specified, the classes included in `TARGET_CLASSES` within the `ProcLoader` class in [`/core/proc_loader.py`](/core/proc_loader.py) will be targeted.
+                - If not specified, the classes included in `TARGET_CLASSES` within the `ProcLoader` class in [`/manager/core/proc_loader.py`](/manager/core/proc_loader.py) will be targeted.
             - `is_debug_mode` (optional)
                 - Specifies the debug mode. (The default is `False`)
                     - If `False`, it ignores the `debug` folder directly under the specified directory.
@@ -307,7 +307,7 @@ In this readme, the sample code is written with the following directory structur
 
 `__init__.py`
 ```
-from .core.register_addon import AddonManager
+from .manager.core.register_addon import AddonManager
 
 bl_info = {
     "name": "Addon_name",
@@ -339,7 +339,7 @@ from typing import Set
 
 from bpy.types import Context, Operator
 
-from ..core.keymap_manager import Key, KeymapManager
+from ..manager.core.keymap_manager import Key, KeymapManager
 
 class HOGE_OT_Report(Operator):
     bl_idname = "hoge.report_operator"
