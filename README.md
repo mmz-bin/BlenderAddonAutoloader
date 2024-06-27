@@ -274,7 +274,7 @@ In this readme, the sample code is written with the following directory structur
             fuga: BoolProperty(name="piyo", default=False)
 
         def register() -> None:
-            PropertiesManager().add(Scene, [("hoge", Hoge_Properties)])
+            PropertiesManager().add(Scene, ("hoge", Hoge_Properties))
 
         ```
         - Referencing a property

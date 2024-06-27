@@ -275,7 +275,7 @@ def register():
             fuga: BoolProperty(name="piyo", default=False)
 
         def register() -> None:
-            PropertiesManager().add(Scene, [("hoge", Hoge_Properties)])
+            PropertiesManager().add(Scene, ("hoge", Hoge_Properties))
 
         ```
         - プロパティを参照する
