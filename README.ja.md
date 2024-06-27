@@ -47,11 +47,12 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
 .
 └── your_addon_folder/
     ├── __init__.py
-    ├── core/
-    │   ├── addon_manager.py
-    │   ├── keymap_manager.py
-    │   ├── proc_loader.py
-    │   └── properties_manager.py
+    ├── manager/
+    │   └── core/
+    │       ├── addon_manager.py
+    │       ├── keymap_manager.py
+    │       ├── properties_manager.py
+    │       └── proc_loader.py
     ├── operators/
     │   ├── __init__.py
     │   └── your_operator.py
