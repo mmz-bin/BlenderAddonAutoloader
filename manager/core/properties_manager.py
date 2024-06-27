@@ -1,3 +1,6 @@
+#This program is distributed under the MIT License.
+#See the LICENSE file for details.
+
 from typing import Self, List, Any
 
 from .exceptions import ContextError

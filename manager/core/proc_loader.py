@@ -12,7 +12,7 @@ from importlib import import_module
 from inspect import getmembers, isclass
 import sys
 
-from .utilities.gen_msg import MsgType, gen_msg
+from .utils.gen_msg import MsgType, gen_msg
 from .exceptions import DuplicateAttributeError
 
 from bpy import types
