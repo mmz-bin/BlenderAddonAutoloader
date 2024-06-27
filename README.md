@@ -15,6 +15,64 @@ It is also possible to specify any class you want.
 
 __Note: The three files inside the core directory (addon_manager.py, keymap_manager.py, proc_loader.py) should be placed in the same directory.__
 
+## Quick Start
+1. Place the [`manager`](/manager/) folder inside your add-on folder.
+2. Create an instance of the [`AddonManager`](#addon_managerpy) class in the `__init__.py` file.
+3. Wrap the `register()` and `unregister()` methods of the `AddonManager` instance with global functions of the same name.
+4. Place the files containing the operators you want to use inside the specified folder.
+
+### Sample Code
+
+`__init__.py`
+```
+from .manager.core.register_addon import AddonManager # Import the AddonManager class
+
+# Add-on information
+bl_info = {
+    "name": "Addon_name",
+    "author": "your_name",
+    "version": (1, 0, 0),
+    "blender": (4, 1, 0),
+    "location": "View3D > Tools > Addon_name",
+    "description": "",
+    "category": "General",
+}
+
+# Name of the folder to load
+load_folder = [
+    'operators',
+]
+
+addon = AddonManager(__file__, load_folder) #Create an instance of the AddonManager class
+
+# Wrap the 'register()' and 'unregister()' methods
+def register(): addon.register()
+def unregister(): addon.unregister()
+```
+
+`operators/hoge.py`
+```
+'''Script to display a notification when the F1 key is pressed'''
+
+from bpy.types import Operator
+
+# Import the `Key` data class and the `KeymapManager` class to register the shortcut key
+from ..manager.core.keymap_manager import Key, KeymapManager
+
+class HOGE_OT_ToggleLang(Operator):
+    bl_idname = "hoge.report_operator"
+    bl_label = "Test Operator"
+    bl_description = "Test."
+
+    def execute(self, context):
+        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
+
+        return {"FINISHED"}
+
+def register():
+    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1')) # Set the 'HOGE_OT_ToggleLang' operator to execute when the F1 key is pressed
+```
+
 ## Features
 - Registers and unregisters all addon classes within a specified directory, including subdirectories.
 - Define a list named `ignore` in the `__init__.py` of each directory to specify module names that should be ignored.

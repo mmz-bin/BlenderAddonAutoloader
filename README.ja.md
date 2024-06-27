@@ -17,6 +17,64 @@ Blender 4.1で動作確認しています。
 
 __注意：coreディレクトリ内部にある3つのファイル(addon_manager.py, keymap_manager.py, proc_loader.py)は同じディレクトリに配置してください。__
 
+## クイックスタート
+1. あなたのアドオンフォルダ内に[`manager`](/manager/)フォルダを配置
+2. `__init__.py`ファイル内で[`AddonManager`](#addon_managerpy)クラスのインスタンスを生成
+3. `AddonManager`インスタンスの`register()`メソッドと`unregister()`メソッドを同じ名前のグローバル関数でラップする
+4. 指定したフォルダ内に使いたいオペレーターを含むファイルを配置する
+
+### サンプルコード
+
+`__init__.py`
+```
+from .manager.core.register_addon import AddonManager #AddonManagerクラスをインポートする
+
+#アドオンの情報
+bl_info = {
+    "name": "Addon_name",
+    "author": "your_name",
+    "version": (1, 0, 0),
+    "blender": (4, 1, 0),
+    "location": "View3D > Tools > Addon_name",
+    "description": "",
+    "category": "General",
+}
+
+#読み込み対象のフォルダ名
+load_folder = [
+    'operators',
+]
+
+addon = AddonManager(__file__, load_folder) #AddonManagerクラスのインスタンスを生成する
+
+#'register()'メソッドと'unregister()'メソッドをラップする
+def register(): addon.register()
+def unregister(): addon.unregister()
+```
+`operators/hoge.py`
+```
+'''F1キーが押されたときに通知を表示するスクリプト'''
+
+from bpy.types import Operator
+
+#ショートカットキーを登録するための`Key`データクラスと`keymapManagerクラスをインポートする`
+from ..manager.core.keymap_manager import Key, KeymapManager
+
+class HOGE_OT_ToggleLang(Operator):
+    bl_idname = "hoge.report_operator"
+    bl_label = "Test Operator"
+    bl_description = "Test."
+
+    def execute(self, context):
+        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
+
+        return {"FINISHED"}
+
+def register():
+    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1')) #F1キーが押されたときに'HOGE_OT_ToggleLang'オペレーターが実行されるように設定する
+```
+
+
 ## 機能
 - サブディレクトリを含めて、指定したディレクトリ内のすべてのアドオンのクラスを登録・解除します。
 - 各ディレクトリの`__init__.py`に`ignore`という名前のリストを定義し、モジュール名を記述することでそのモジュールを無視します。
@@ -304,55 +362,3 @@ __注意：coreディレクトリ内部にある3つのファイル(addon_manage
             - `modules`: 対象のモジュールを指定します。
             - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`の初期値を設定します。
         - 例: `classes = pl.load_classes(modules)`
-
-# サンプル
-
-`__init__.py`
-```
-from .manager.core.register_addon import AddonManager
-
-bl_info = {
-    "name": "Addon_name",
-    "author": "your_name",
-    "version": (1, 0, 0),
-    "blender": (4, 1, 0),
-    "location": "View3D > Tools > Addon_name",
-    "description": "",
-    "category": "General",
-}
-
-addon = AddonManager(__file__, [
-    'operators',
-    'panels'
-])
-
-def register() -> None: addon.register()
-
-def unregister() -> None: addon.unregister()
-
-if __name__ == '__main__':
-    register()
-```
-
-F1キーが押されたときに通知を表示するアドオンの例(サンプルと同じファイル構成の場合、`operators`フォルダ内に適当な名前をつけた`.py`ファイルを配置し、その中にコピペしてください)
-
-```
-from typing import Set
-
-from bpy.types import Context, Operator
-
-from ..manager.core.keymap_manager import Key, KeymapManager
-
-class HOGE_OT_ToggleLang(Operator):
-    bl_idname = "hoge.toggle_lang_operator"
-    bl_label = "Toggle Lang Operator"
-    bl_description = "Toggle Language."
-
-    def execute(self, context: Context) -> Set[str]:
-        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
-
-        return {"FINISHED"}
-
-def register() -> None:
-    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1'))
-```
