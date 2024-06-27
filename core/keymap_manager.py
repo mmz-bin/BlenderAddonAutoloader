@@ -1,3 +1,6 @@
+#This program is distributed under the MIT License.
+#See the LICENSE file for details.
+
 from dataclasses import dataclass
 from typing import Self, List
 
@@ -58,7 +61,6 @@ class KeymapManager:
         Returns:
             List[tuple[KeyMap, KeyMapItem]]: Registered key's keymap and keymap items
         """
-
         if not isinstance(keys, List): keys = [keys] #リストでなければリストにする
 
         key_config = context.window_manager.keyconfigs.addon #キーコンフィグ
@@ -97,9 +99,9 @@ class KeymapManager:
             bool: Whether the target for deletion existed or not.
         """
 
-        if type(subject) == tuple[KeyMap, KeyMapItem]:
+        if type(subject) == tuple:
             try:
-                subject[0].keymap_items.remove(subject[1])
+                subject[0].keymap_items.remove(subject[1]) #type: ignore
                 self.__shortcut_keys.remove(subject) #type: ignore
                 return True
             except ValueError:
