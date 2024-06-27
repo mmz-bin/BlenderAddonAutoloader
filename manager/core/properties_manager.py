@@ -47,6 +47,7 @@ class PropertiesManager:
 
         Raises:
             ContextError: Throws if no prefix is set
+            ValueError: Thrown when there is a property name conflict.
 
         Returns:
             List[str]: Registered property name (with prefix)
@@ -60,6 +61,7 @@ class PropertiesManager:
             if ProcLoader.isDisabled(op): continue
 
             name_with_prefix = f"{self.__name}_{name}"
+            if hasattr(prop_type, name_with_prefix): raise ValueError(f'The property name "{name_with_prefix}" already exists in "{str(prop_type)}".')
             setattr(prop_type, name_with_prefix, PointerProperty(type=op)) # プロパティを追加
 
             register_name.append(name_with_prefix)
