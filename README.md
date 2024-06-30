@@ -94,6 +94,7 @@ def register():
     - These can be enabled using the `is_debug_mode` argument of the [`AddonManager`](#addon_managerpy) class.
         - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
         - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_managerpy) method) becomes available.
+- Use the `DrawText` class to simplify text rendering. (Documentation not created)
 
 Would you like me to explain or elaborate on any part of this translation?
 - You can make it multilingual by using the [translation table](#addon_managerpy) in the standard Blender format.
