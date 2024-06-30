@@ -95,7 +95,7 @@ def register():
         - When disabled, if a `debug` directory exists directly under each directory, the modules within it are ignored.
         - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_managerpy) method) becomes available.
 
-Would you like me to explain or elaborate on any part of this translation?
+
 - You can make it multilingual by using the [translation table](#addon_managerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
