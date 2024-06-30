@@ -1,8 +1,8 @@
-This library uses English that has been machine-translated from Japanese.
+The English used in this script is based on machine translation from Japanese, so there may be some unnatural parts.
 
 __[日本語のreadmeはこちらから](README.ja.md)__
 
-# __Due to ongoing development, this script is subject to potentially disruptive changes.__
+# __This script is under development, so there is a possibility that disruptive changes may be made.__
 
 # Blender_Add-on_Autoloader
 This script allows for the dynamic registration and unregistration of files that make up the Blender addon. It automates the tedious tasks of registering, unregistering, disabling, prioritizing classes, and registering shortcut keys. Verified to work with Blender 4.1.
@@ -96,7 +96,7 @@ def register():
         - When enabled, modules in the `debug` directory are loaded, and the addon reloading feature ([`reload()`](#addon_managerpy) method) becomes available.
 - Use the `DrawText` class to simplify text rendering. (Documentation not created)
 
-Would you like me to explain or elaborate on any part of this translation?
+
 - You can make it multilingual by using the [translation table](#addon_managerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
