@@ -99,6 +99,7 @@ def register():
 
 - 読み込み対象の各モジュールにregister()関数やunregister()関数がある場合、アドオンの登録・解除の際に呼び出されます。
 - Blender標準形式の[翻訳テーブル](#addon_managerpy)を使用して多言語に対応させることができます。
+- [`constants.py`](#constantspy)にオペレーターの戻り値やモード名などいくつかの定数が用意されているため、入力の手間とタイプミスを減らすことができます。
 
 このreadmeでは以下のディレクトリ構成としてサンプルコードを記述します：
 ```
@@ -106,11 +107,12 @@ def register():
 └── your_addon_folder/
     ├── __init__.py
     ├── manager/
-    │   └── core/
-    │       ├── addon_manager.py
-    │       ├── keymap_manager.py
-    │       ├── properties_manager.py
-    │       └── proc_loader.py
+    │   ├── core/
+    │   │   ├── addon_manager.py
+    │   │   ├── keymap_manager.py
+    │   │   ├── properties_manager.py
+    │   │   └── proc_loader.py
+    │   └── constants.py
     ├── operators/
     │   ├── __init__.py
     │   └── your_operator.py
@@ -362,3 +364,46 @@ def register():
             - `modules`: 対象のモジュールを指定します。
             - `cat_name`(オプション): `bpy.types.Panel`を継承したクラスの`bl_category`の初期値を設定します。
         - 例: `classes = pl.load_classes(modules)`
+
+## constants.py
+- いくつかの定数がクラスとして用意されています。
+- __Report__ クラス
+    - オペレーター内の`report()`メソッドの第一引数に指定する値が`set[str]`型で用意されています。
+        - ERROR
+        - INFO
+- __Mode__ クラス
+    - モードの値が`str`型で用意されています。
+        - EDIT
+        - EDIT_MESH
+        - EDIT_CURVE
+        - EDIT_SURFACE
+        - EDIT_TEXT
+        - EDIT_METABALL
+        - EDIT_GPENCIL
+        - EDIT_ARMATURE
+        - EDIT_LATTICE
+        - OBJECT
+        - SCULPT
+        - PAINT_VERTEX
+        - PAINT_WEIGHT
+        - PAINT_TEXTURE
+- __ObjectType__ クラス
+    - オブジェクトの種類が`str`型で用意されています。
+        - MESH
+        - CURVE
+        - SURFACE
+        - META
+        - FONT
+        - ARMATURE
+        - LATTICE
+        - EMPTY
+        - CAMERA
+        - LIGHT
+        - SPEAKER
+
+- __Op__ クラス
+    - オペレーターが返す戻り値が`set[str]`型で用意されています。
+        - FINISHED
+        - CANCELLED
+        - RUNNING_MODAL
+        - PASS_THROUGH

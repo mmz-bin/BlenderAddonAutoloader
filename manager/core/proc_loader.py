@@ -1,6 +1,8 @@
 #This program is distributed under the MIT License.
 #See the LICENSE file for details.
 
+# pyright: reportAttributeAccessIssue = false
+# pyright: reportUnknownMemberType = false
 
 from typing import Sequence, List, Dict, Set
 from types import ModuleType
@@ -20,16 +22,16 @@ from bpy import types
 #このデコレータが付いている場合、そのクラスは無視されます。
 def disable(cls: object) -> object:
     if hasattr(cls, 'addon_proc_is_disabled'): raise DuplicateAttributeError("The 'addon_proc_is_disabled' attribute is used in the 'disable' decorator.")
-    cls.addon_proc_is_disabled = True # type: ignore
+    cls.addon_proc_is_disabled = True
     return cls
 
 #このデコレータで読み込みの優先順位を付けられます。付けられなかった場合は最後になります。
-def priority(pr: int): # type: ignore
-    def _priority(cls): # type: ignore
-        if (hasattr(cls, 'addon_proc_priority')): raise DuplicateAttributeError("The 'addon_proc_priority' attribute is used in the 'priority' decorator.") # type: ignore
-        cls.addon_proc_priority = pr # type: ignore
-        return cls # type: ignore
-    return _priority # type: ignore
+def priority(pr: int):
+    def _priority(cls: object):
+        if (hasattr(cls, 'addon_proc_priority')): raise DuplicateAttributeError("The 'addon_proc_priority' attribute is used in the 'priority' decorator.")
+        cls.addon_proc_priority = pr
+        return cls
+    return _priority
 
 class ProcLoader:
     """Loads modules and addon classes.
@@ -41,7 +43,7 @@ class ProcLoader:
         NotADirectoryError: Throws if the add-on module path is not a folder.
     """
 
-    DEFAULT_TARGET_CLASSES: object = (
+    DEFAULT_TARGET_CLASSES: List[object] = ( # type: ignore
         types.Operator, types.Panel, types.Menu, types.Header, types.UIList, types.PropertyGroup, types.AddonPreferences, types.RenderEngine, types.Node, types.NodeSocket,
         types.NodeTree, types.Gizmo, types.GizmoGroup, types.Macro, types.OperatorFileListElement, types.OperatorProperties, types.Space, types.Region, types.KeyMap, types.KeyMapItem,
         types.RenderSettings, types.Scene, types.Object, types.Mesh, types.Curve, types.MetaBall, types.Text, types.Sound, types.WindowManager, types.Screen,
@@ -55,7 +57,7 @@ class ProcLoader:
         types.FCurveSample, types.FCurveModifiers, types.CompositorNodeTree, types.ShaderNodeTree, types.TextureNodeTree, types.GeometryNodeTree, types.OperatorMacro
     )
 
-    def __init__(self, path: str, target_classes: object | None = None, is_debug_mode: bool = False) -> None:
+    def __init__(self, path: str, target_classes: List[object] | None = None, is_debug_mode: bool = False) -> None:
         """Initialize and add addon folder to module search path
 
         Args:
@@ -129,9 +131,9 @@ class ProcLoader:
             try:
                 import_module(path)
             except (ImportError, ModuleNotFoundError) as e:
-                print(gen_msg(ProcLoader, MsgType.ERROR, f'ProcLoader: Warning: Failed to load "{path}" module. \n {e}'))
+                print(gen_msg(ProcLoader, MsgType.ERROR, f'Failed to load "{path}" module. \n {e}'))
 
-        return [import_module(mdl) for mdl in paths] # type: ignore
+        return [import_module(mdl) for mdl in paths]
 
     #モジュール内のクラスを取得する
     def load_classes(self, modules: List[ModuleType], cat_name: str | None = None) -> List[object]:
@@ -151,10 +153,10 @@ class ProcLoader:
                 clazz = clazz[1]
                 #対象のクラスがアドオンのクラスかつ無効でない場合追加する
                 if not any(issubclass(clazz, c) and not clazz == c for c in self.__TARGET_CLASSES): continue # type: ignore
-                if hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True: continue # type: ignore
+                if hasattr(clazz, 'addon_proc_is_disabled') and clazz.addon_proc_is_disabled == True: continue
 
                 #優先順位とクラスを辞書に追加する
-                if hasattr(clazz, 'addon_proc_priority'): cls_priority[clazz] = clazz.addon_proc_priority # type: ignore
+                if hasattr(clazz, 'addon_proc_priority'): cls_priority[clazz] = clazz.addon_proc_priority
                 else: cls_priority[clazz] = -1
 
         #優先順位を元にソートする(数が小さいほど先、-1(0以下)は最後)
@@ -307,7 +309,7 @@ class ProcLoader:
         """
         for cls in classes:
             cls = cls[0]
-            if not hasattr(cls, 'bl_idname'): cls.bl_idname = cls.__name__ # type: ignore
+            if not hasattr(cls, 'bl_idname'): cls.bl_idname = cls.__name__
             if cat_name and issubclass(cls, types.Panel) and not hasattr(cls, 'bl_category'): cls.bl_category = cat_name # type: ignore
 
         return [item[0] for item in classes]

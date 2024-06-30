@@ -99,6 +99,7 @@ Would you like me to explain or elaborate on any part of this translation?
 - You can make it multilingual by using the [translation table](#addon_managerpy) in the standard Blender format.
 
 - If there are register() functions and unregister() functions in each module to be loaded, they will be called when registering and unregistering the add-on.
+- Since several constants such as return values and mode names of operators are provided in [`constants.py`](#constantspy), you can reduce the effort of input and typos.
 
 In this readme, the sample code is written with the following directory structure:
 ```
@@ -106,11 +107,12 @@ In this readme, the sample code is written with the following directory structur
 └── your_addon_folder/
     ├── __init__.py
     ├── manager/
-    │   └── core/
-    │       ├── addon_manager.py
-    │       ├── keymap_manager.py
-    │       ├── properties_manager.py
-    │       └── proc_loader.py
+    │   ├── core/
+    │   │   ├── addon_manager.py
+    │   │   ├── keymap_manager.py
+    │   │   ├── properties_manager.py
+    │   │   └── proc_loader.py
+    │   └── constants.py
     ├── operators/
     │   ├── __init__.py
     │   └── your_operator.py
@@ -362,55 +364,45 @@ In this readme, the sample code is written with the following directory structur
             - `cat_name`(optional): Sets the initial value of `bl_category` for classes inheriting from `bpy.types.Panel`.
         - Example: `classes = pl.load_classes(modules)`
 
-# Sample
+## constants.py
+- Several constants are provided as classes.
+- __Report__ class
+    - Values specified as the first argument of the `report()` method within the operator are provided as `set[str]` type.
+        - ERROR
+        - INFO
+- __Mode__ class
+    - Mode values are provided as `str` type.
+        - EDIT
+        - EDIT_MESH
+        - EDIT_CURVE
+        - EDIT_SURFACE
+        - EDIT_TEXT
+        - EDIT_METABALL
+        - EDIT_GPENCIL
+        - EDIT_ARMATURE
+        - EDIT_LATTICE
+        - OBJECT
+        - SCULPT
+        - PAINT_VERTEX
+        - PAINT_WEIGHT
+        - PAINT_TEXTURE
+- __ObjectType__ class
+    - Object types are provided as `str` type.
+        - MESH
+        - CURVE
+        - SURFACE
+        - META
+        - FONT
+        - ARMATURE
+        - LATTICE
+        - EMPTY
+        - CAMERA
+        - LIGHT
+        - SPEAKER
 
-`__init__.py`
-```
-from .manager.core.register_addon import AddonManager
-
-bl_info = {
-    "name": "Addon_name",
-    "author": "your_name",
-    "version": (1, 0, 0),
-    "blender": (4, 1, 0),
-    "location": "View3D > Tools > Addon_name",
-    "description": "",
-    "category": "General",
-}
-
-addon = AddonManager(__file__, [
-    'operators',
-    'panels'
-])
-
-def register() -> None: addon.register()
-
-def unregister() -> None: addon.unregister()
-
-if __name__ == '__main__':
-    register()
-```
-
-An example of an add-on that displays a notification when the F1 key is pressed (if the file structure is the same as the sample, place a `.py` file with an appropriate name in the `operators` folder and copy and paste into it).
-
-```
-from typing import Set
-
-from bpy.types import Context, Operator
-
-from ..manager.core.keymap_manager import Key, KeymapManager
-
-class HOGE_OT_Report(Operator):
-    bl_idname = "hoge.report_operator"
-    bl_label = "Report Operator"
-    bl_description = "Send information"
-
-    def execute(self, context: Context) -> Set[str]:
-        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
-
-        return {"FINISHED"}
-
-def register() -> None:
-    KeymapManager().add(Key(HOGE_OT_Report, 'F1'))
-
-```
+- __Op__ class
+    - The return values of the operator are provided as `set[str]` type.
+        - FINISHED
+        - CANCELLED
+        - RUNNING_MODAL
+        - PASS_THROUGH
