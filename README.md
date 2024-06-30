@@ -1,4 +1,4 @@
-This library uses English that has been machine-translated from Japanese.
+The English used in this script is based on machine translation from Japanese, so there may be some unnatural parts.
 
 __[日本語のreadmeはこちらから](README.ja.md)__
 
