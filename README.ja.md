@@ -60,18 +60,18 @@ from bpy.types import Operator
 #ショートカットキーを登録するための`Key`データクラスと`keymapManagerクラスをインポートする`
 from ..manager.core.keymap_manager import Key, KeymapManager
 
-class HOGE_OT_ToggleLang(Operator):
-    bl_idname = "hoge.report_operator"
+class HOGE_OT_Sample(Operator):
+    bl_idname = "hoge.sample_operator"
     bl_label = "Test Operator"
     bl_description = "Test."
 
     def execute(self, context):
-        self.report({'INFO'}, "HOGE_OT_Report!!!!!!!!!!!!!!")
+        self.report({'INFO'}, "HOGE_OT_Sample!!!!!!!!!!!!!!")
 
         return {"FINISHED"}
 
 def register():
-    KeymapManager().add(Key(HOGE_OT_ToggleLang, 'F1')) #F1キーが押されたときに'HOGE_OT_ToggleLang'オペレーターが実行されるように設定する
+    KeymapManager().add(Key(HOGE_OT_Sample, 'F1')) #F1キーが押されたときに'HOGE_OT_Sample'オペレーターが実行されるように設定する
 ```
 
 
