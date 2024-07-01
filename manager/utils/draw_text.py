@@ -16,7 +16,7 @@ class DrawText():
         self.__font_id: int = 0
 
         self.__func: object | None = None
-        self.__args: tuple[Any, ...] = (None, )
+        self.__args: tuple[Any, ...] | None = None
         self.__region_type: str | None = None
         self.__draw_type: str | None = None
 
@@ -34,13 +34,13 @@ class DrawText():
             self.__font_id = blf.load(abs_path)
 
     @property
-    def func(self) -> object: return self.__func
+    def func(self) -> object | None: return self.__func
     @property
-    def args(self) -> tuple[Any, ...]: return self.__args
+    def args(self) -> tuple[Any, ...] | None: return self.__args
     @property
-    def region_type(self) -> object: return self.__region_type
+    def region_type(self) -> str | None: return self.__region_type
     @property
-    def draw_type(self) -> object: return self.__draw_type
+    def draw_type(self) -> str | None: return self.__draw_type
 
     def is_registered(self) -> bool: return self.__func is not None
     def is_drawing(self) -> bool: return self.__handler is not None
@@ -54,21 +54,24 @@ class DrawText():
             color (tuple[float, float, float, float], optional): Color to display(red, green, blue, alpha). Defaults to (0.0, 0.0, 0.0, 0.0).
             size (float, optional): Size to display. Defaults to 10.
         """
-        font_id = self.__font_id
-        blf.position(font_id, pos[0], pos[1], pos[2])
-        blf.color(font_id, color[0], color[1], color[2], color[3])
-        blf.size(font_id, size)
-        blf.draw(font_id, text)
+        blf.position(self.__font_id, pos[0], pos[1], pos[2])
+        blf.color(self.__font_id, color[0], color[1], color[2], color[3])
+        blf.size(self.__font_id, size)
+        blf.draw(self.__font_id, text)
 
 
-    def display(self, func: object | None, args: tuple[Any, ...]=(None, ), region_type: str="WINDOW", draw_type: str="POST_PIXEL") -> object:
+    def display(self, func: object | None=None, args: tuple[Any, ...] | None=None, region_type: str="WINDOW", draw_type: str="POST_PIXEL") -> object | None:
         """Add a drawing function. If previously registered, arguments can be omitted."""
-        if func is not None: self.__func = func
-        if args is not (None, ): self.__args = args
+        if func is None:
+            if self.__func is None:
+                return None
+        else:
+            self.__func = func
+        if args is not None: self.__args = args
         if self.__region_type is None or region_type != self.__region_type: self.__region_type = region_type
         if self.__draw_type is None or draw_type != self.__draw_type: self.__draw_type = draw_type
 
-        self.__handler = SpaceView3D.draw_handler_add(self.__func, self.__args + (self, ), self.__region_type, self.__draw_type)
+        self.__handler = SpaceView3D.draw_handler_add(self.__func, (self, ) + self.__args, self.__region_type, self.__draw_type) # type: ignore
         bpy.context.area.tag_redraw()
         return self.__handler
 
@@ -81,7 +84,7 @@ class DrawText():
 
     def clear(self) -> None:
         """Clear saved content."""
-        self.__func = None
+        self.erase()
         self.__args = (None, )
         self.__region_type = None
         self.__draw_type = None
