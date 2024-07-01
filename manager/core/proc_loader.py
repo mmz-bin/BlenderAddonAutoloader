@@ -133,7 +133,7 @@ class ProcLoader:
                 else:
                     modules.append(mdl_path)
 
-        return [mdl for mdl in modules if not mdl in ignore_modules and not mdl.startswith(tuple(ignore_modules))]
+        return [mdl for mdl in modules if not mdl.startswith(tuple(ignore_modules))]
 
 
     #モジュールをインポートする
